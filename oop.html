@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="oop">
+
+  <title>
+    A little bit about anything
+&ndash; OOP  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/oop.html">OOP</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="multi-modules">
+<h2>Multi-modules</h2>
+<p>Прежде чем рассматривать объектно-ориентированный стиль программирования рассмотрим вариант процедурного программирования с множеством модулей</p>
+<p>В этом случае все функции выносятся в отдельные модули (файлы с расширением .pm).
+Основной же скрипт (файл .pl) подгружает эти модули, а те в свою очередь подгружают модули, от которых зависят сами.
+Скрипт берет функции, объявленные в подгруженных модулях, и с их помощью делает свое темное дело.</p>
+<p>MyLib.pm</p>
+<div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">MyLib</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">Test</span> <span class="p">{</span>
+<span class="k">print</span> <span class="s">&quot;MyLib - Test Ok!\n&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="mi">1</span><span class="p">;</span> <span class="c1"># сообщает интерпретатору, что все ОК</span>
+</pre></div>
+<p>… а также пример скрипта, использующего этот модуль:</p>
+<p>test.pl</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">MyLib</span><span class="p">;</span>
+
+<span class="nn">MyLib::</span><span class="n">Test</span><span class="p">();</span>
+</pre></div>
+<p>Теперь представим себе, что есть модуль, функции которого нам приходится использовать довольно часто.
+В этом случае некоторые функции было бы удобно импортировать в пространство имен скрипта.
+Перепишем пример соответствующим образом.</p>
+<p>MyLib.pm</p>
+<div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">MyLib</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Exporter</span> <span class="s">&#39;import&#39;</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@EXPORT_OK</span> <span class="o">=</span> <span class="sx">qw/Test/</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">Test</span> <span class="p">{</span>
+<span class="k">print</span> <span class="s">&quot;MyLib - Test Ok!\n&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="mi">1</span><span class="p">;</span>
+</pre></div>
+<p>test.pl</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">MyLib</span> <span class="sx">qw/Test/</span><span class="p">;</span>
+
+<span class="n">Test</span><span class="p">();</span> <span class="c1"># вызовет MyLib::Test()</span>
+</pre></div>
+</div>
+<div class="section" id="id1">
+<h2>OOP</h2>
+<div class="section" id="person-pm">
+<h3>Person.pm</h3>
+<div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">Person</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+<span class="c1"># shift - подразумевает параметр метода при инициализации экземпляра класса</span>
+<span class="k">my</span> <span class="nv">$class</span> <span class="o">=</span> <span class="nb">shift</span><span class="p">;</span>   <span class="c1"># в качестве 1-ого аргумента передает класс Person</span>
+<span class="c1"># определяем свойства класса</span>
+<span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">_firstName</span> <span class="o">=&gt;</span> <span class="nb">shift</span><span class="p">,</span>
+    <span class="n">_lastName</span>  <span class="o">=&gt;</span> <span class="nb">shift</span><span class="p">,</span>
+    <span class="n">_ssn</span>       <span class="o">=&gt;</span> <span class="nb">shift</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="c1"># Print all the values just for clarification.</span>
+<span class="k">print</span> <span class="s">&quot;First Name is $self-&gt;{_firstName}\n&quot;</span><span class="p">;</span> <span class="c1"># свойство класса определяется как self -&gt; { &lt;parameter&gt; }</span>
+<span class="k">print</span> <span class="s">&quot;Last Name is $self-&gt;{_lastName}\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;SSN is $self-&gt;{_ssn}\n&quot;</span><span class="p">;</span>
+<span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span> <span class="c1"># функция bless возвращает ссылки на экземпляр класса и класс</span>
+<span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">sub</span> <span class="nf">setFirstName</span> <span class="p">{</span>
+<span class="k">my</span> <span class="p">(</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$firstName</span> <span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_firstName</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$firstName</span> <span class="k">if</span> <span class="nb">defined</span><span class="p">(</span><span class="nv">$firstName</span><span class="p">);</span>
+<span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_firstName</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">getFirstName</span> <span class="p">{</span>
+<span class="k">my</span><span class="p">(</span> <span class="nv">$self</span> <span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+<span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_firstName</span><span class="p">};</span>
+<span class="p">}</span>
+<span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="employee-pl">
+<h3>employee.pl</h3>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">Person</span><span class="p">;</span>
+
+<span class="nv">$object</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Person</span><span class="p">(</span> <span class="s">&quot;Mohammad&quot;</span><span class="p">,</span> <span class="s">&quot;Saleem&quot;</span><span class="p">,</span> <span class="mi">23234345</span><span class="p">);</span>
+<span class="c1"># Get first name which is set using constructor.</span>
+<span class="nv">$firstName</span> <span class="o">=</span> <span class="nv">$object</span><span class="o">-&gt;</span><span class="n">getFirstName</span><span class="p">();</span>
+
+<span class="k">print</span> <span class="s">&quot;Before Setting First Name is : $firstName\n&quot;</span><span class="p">;</span>
+
+<span class="c1"># Now Set first name using helper function.</span>
+<span class="nv">$object</span><span class="o">-&gt;</span><span class="n">setFirstName</span><span class="p">(</span> <span class="s">&quot;Mohd.&quot;</span> <span class="p">);</span>
+
+<span class="c1"># Now get first name set by helper function.</span>
+<span class="nv">$firstName</span> <span class="o">=</span> <span class="nv">$object</span><span class="o">-&gt;</span><span class="n">getFirstName</span><span class="p">();</span>
+<span class="k">print</span> <span class="s">&quot;Before Setting First Name is : $firstName\n&quot;</span><span class="p">;</span>
+</pre></div>
+<pre class="literal-block">
+First Name is Mohammad
+Last Name is Saleem
+SSN is 23234345
+Before Setting First Name is : Mohammad
+Before Setting First Name is : Mohd.
+</pre>
+</div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Сб 28 Июль 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/oop.html">oop</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/oop.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/oop.html&text=OOP">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

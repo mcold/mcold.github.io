@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="class">
+
+  <title>
+    A little bit about anything
+&ndash; Metaclass  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/metaclass.html">Metaclass</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="py2-py3">
+<h2>Py2 &amp; Py3</h2>
+<p>Версии Python по разному регламентируют синтаксис метакласса</p>
+<p>Python2:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+
+<span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="k">pass</span>
+</pre></div>
+<p>Python3:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">():</span>
+    <span class="vm">__metaclass__</span> <span class="o">=</span> <span class="n">ABCMeta</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Вс 29 Июль 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/class.html">class</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/metaclass.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/metaclass.html&text=Metaclass">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>A little bit about anything - django</title><link href="/" rel="alternate"></link><link href="/feeds/django.atom.xml" rel="self"></link><id>/</id><updated>2018-07-28T11:01:00+02:00</updated><entry><title>2. Mapping URLs</title><link href="/tango/mapping_urls.html" rel="alternate"></link><published>2018-07-28T11:01:00+02:00</published><updated>2018-07-28T11:01:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/mapping_urls.html</id><summary type="html">&lt;p class="first last"&gt;Mapping urls of application into project&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="tango-urls-py"&gt;
+&lt;h2&gt;tango.urls.py&lt;/h2&gt;
+&lt;p&gt;Подключаем url-ы rango приложения&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.contrib&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;admin&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rango&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;
+
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^admin/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^rango/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;rango.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^admin/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="rango-urls-py"&gt;
+&lt;h2&gt;rango.urls.py&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.conf.urls&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;rango&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;
+
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sa"&gt;r&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;^$&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;views&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;index&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="rango-views-py"&gt;
+&lt;h2&gt;rango.views.py&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;django.http&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Rango says hey there partner!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="tango"></category></entry><entry><title>1. Init Project &amp; create application</title><link href="/tango/init.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/init.html</id><summary type="html">&lt;p class="first last"&gt;Инициализируем проект и приложение&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="initialize-project"&gt;
+&lt;h2&gt;Initialize project&lt;/h2&gt;
+&lt;pre class="literal-block"&gt;
+django-admin startproject tango
+&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;
+└───tango
+│   manage.py
+│
+└───tango
+        settings.py
+        urls.py
+        wsgi.py
+        __init__.py
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="run-server"&gt;
+&lt;h2&gt;Run server&lt;/h2&gt;
+&lt;pre class="literal-block"&gt;
+python manage.py runserver
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="create-application"&gt;
+&lt;h2&gt;Create application&lt;/h2&gt;
+&lt;pre class="literal-block"&gt;
+python manage.py startapp rango
+&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;
+│   db.sqlite3
+│   manage.py
+│
+├───rango
+│   │   admin.py
+│   │   apps.py
+│   │   models.py
+│   │   tests.py
+│   │   views.py
+│   │   __init__.py
+│   │
+│   └───migrations
+│           __init__.py
+│
+└───tango
+        settings.py
+        settings.pyc
+        urls.py
+        urls.pyc
+        wsgi.py
+        wsgi.pyc
+        __init__.py
+        __init__.pyc
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="register-new-application"&gt;
+&lt;h2&gt;Register new application&lt;/h2&gt;
+&lt;p&gt;Добавляем приложение rango в качестве элемента списка INSTALLED_APPS модуля settings.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.admin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.auth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.contenttypes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.sessions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.messages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;django.contrib.staticfiles&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s1"&gt;&amp;#39;rango&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="tango"></category></entry><entry><title>0. Preview Tango Tutorial</title><link href="/tango/preview.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/preview.html</id><summary type="html">&lt;p class="first last"&gt;Описание курса&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="about"&gt;
+&lt;h2&gt;About&lt;/h2&gt;
+&lt;p&gt;Данная серия уроков предназначена для прохождения туториала &lt;a class="reference external" href="http://www.tangowithdjango.com"&gt;tango with django&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;При прохождении курса использовались:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Django        1.11.13&lt;/li&gt;
+&lt;li&gt;Python        2.7.15&lt;/li&gt;
+&lt;li&gt;Pillow        5.2.0&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="tango"></category></entry></feed>

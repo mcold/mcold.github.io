@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="tango">
+
+  <title>
+    A little bit about anything
+&ndash; 1. Init Project &amp; create application  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/tango/init.html">1. Init Project &amp; create application</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="initialize-project">
+<h2>Initialize project</h2>
+<pre class="literal-block">
+django-admin startproject tango
+</pre>
+<pre class="literal-block">
+└───tango
+│   manage.py
+│
+└───tango
+        settings.py
+        urls.py
+        wsgi.py
+        __init__.py
+</pre>
+</div>
+<div class="section" id="run-server">
+<h2>Run server</h2>
+<pre class="literal-block">
+python manage.py runserver
+</pre>
+</div>
+<div class="section" id="create-application">
+<h2>Create application</h2>
+<pre class="literal-block">
+python manage.py startapp rango
+</pre>
+<pre class="literal-block">
+│   db.sqlite3
+│   manage.py
+│
+├───rango
+│   │   admin.py
+│   │   apps.py
+│   │   models.py
+│   │   tests.py
+│   │   views.py
+│   │   __init__.py
+│   │
+│   └───migrations
+│           __init__.py
+│
+└───tango
+        settings.py
+        settings.pyc
+        urls.py
+        urls.pyc
+        wsgi.py
+        wsgi.pyc
+        __init__.py
+        __init__.pyc
+</pre>
+</div>
+<div class="section" id="register-new-application">
+<h2>Register new application</h2>
+<p>Добавляем приложение rango в качестве элемента списка INSTALLED_APPS модуля settings.py</p>
+<div class="highlight"><pre><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;rango&#39;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Сб 28 Июль 2018</p>
+    <p>Category: <a href="/category/django.html">django</a>
+ &ndash; Tags:
+      <a href="/tag/tango.html">tango</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/tango/init.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/tango/init.html&text=1. Init Project &amp; create application">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

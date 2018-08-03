@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="module, py2, py3">
+
+  <title>
+    A little bit about anything
+&ndash; Schedule  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/packages/schedule.html">Schedule</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id1">
+<h2>Общая инфа</h2>
+<p>Пакет представляет собой API для создания job-ов</p>
+</div>
+<div class="section" id="api">
+<h2>API</h2>
+<p>Основные классы API:
+* Job
+* CancelJob
+* Scheduler</p>
+<p>Главным классом выступает класс Scheduler.</p>
+<p>По-умолчанию при импорте пакета создается объект этого класса Scheduler.default_scheduler, методы которого и используются для работы с job-ами.
+Метод пакета every(self, interval=1) создает объект класса Job и добавляет его к списку job-ов объекта Scheduler.
+Соответственно оба класса привязаны друг другу соотношением типа родитель-потомок.
+Класса job имеет параметр self.schedule = scheduler, а класс Schedule - self.jobs.</p>
+<p>Класс CancelJob пустой и используется для определения отмененных job-ов.</p>
+</div>
+<div class="section" id="job">
+<h2>Job</h2>
+<p>Добавление job-а к schedule.jobs осуществляется методом Job.do(self, job_func), где в качестве аргумента выступает метод job_func, определяемый пользователем в своем модуле.
+Выполнение всего списка schedule.jobs осуществляеся методом schedule.run_pending.</p>
+<p>Управление экземплярами job-ов осуществляется при помощи параметров класса:</p>
+<ul class="simple">
+<li>self.interval     # pause interval * unit between runs</li>
+<li>self.latest       # upper limit to the interval</li>
+<li>self.job_func     # the job job_func to run</li>
+<li>self.unit         # time units, e.g. 'minutes', 'hours', ...</li>
+<li>self.at_time      # optional time at which this job runs</li>
+<li>self.last_run     # datetime of the last run</li>
+<li>self.next_run     # datetime of the next run</li>
+<li>self.period       # timedelta between runs, only valid for</li>
+<li>self.start_day    # Specific day of the week to start on</li>
+<li>self.tags         # unique set of tags for the job</li>
+<li>self.scheduler    # scheduler to register with</li>
+</ul>
+<p>self.unit - является универсальным, хранит в себе тип используемого периода</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schedule</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="k">def</span> <span class="nf">job</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m here...&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+    <span class="n">schedule</span><span class="o">.</span><span class="n">every</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">minutes</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+    <span class="n">schedule</span><span class="o">.</span><span class="n">every</span><span class="p">()</span><span class="o">.</span><span class="n">hour</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+    <span class="n">schedule</span><span class="o">.</span><span class="n">every</span><span class="p">()</span><span class="o">.</span><span class="n">day</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="s2">&quot;15:05&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+    <span class="n">schedule</span><span class="o">.</span><span class="n">every</span><span class="p">()</span><span class="o">.</span><span class="n">monday</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+    <span class="n">schedule</span><span class="o">.</span><span class="n">every</span><span class="p">()</span><span class="o">.</span><span class="n">wednesday</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="s2">&quot;13:15&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">schedule</span><span class="o">.</span><span class="n">run_pending</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">test</span><span class="p">()</span>
+</pre></div>
+<p>В фрагменте выше каждый из вызовов метода do создает отдельный экземпляр job-а</p>
+</div>
+<div class="section" id="tags">
+<h2>Tags</h2>
+<p>job представляет собой функцию и набор тегов. Теги в свою очередь хранятся в job.tags. По ним можно определять какие job-ы необходимо запускать или удалять.
+Например</p>
+<div class="highlight"><pre><span></span><span class="n">schedule</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="s1">&#39;my_tag&#39;</span><span class="p">)</span>
+</pre></div>
+<p>приведет к удалению всех job-ов с тегом 'my_tag' из schedule.jobs и они не будут выполнены методом shcedule.run_pending()</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">schedule</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">job</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m here ...&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+    <span class="n">schedule</span><span class="o">.</span><span class="n">every</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">seconds</span><span class="o">.</span><span class="n">tag</span><span class="p">(</span><span class="s1">&#39;my_tag&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">schedule</span><span class="o">.</span><span class="n">run_pending</span><span class="p">()</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">schedule</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="s1">&#39;my_tag&#39;</span><span class="p">)</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">test</span><span class="p">()</span>
+</pre></div>
+<pre class="literal-block">
+I'm here ...
+I'm here ...
+</pre>
+</div>
+<div class="section" id="schedule-nssm-job-if-os-windows">
+<h2>schedule + nssm = job if os = Windows</h2>
+<p>В моем случае данный пакет получил особую пользу в сочетании с утилитой <a class="reference external" href="http://nssm.cc">nssm</a>.</p>
+<p>Данная программа позволяет создавать службы под OS Windows, что в сочетании с возможностями schedule манипулировать системой задач не хуже планировщика cron в Linux
+Более того, конструкцию усовершенствовать при помощи пакета <a class="reference external" href="http://www.fabfile.org">fabric</a>.</p>
+<p>но это уже совсем другая история ...</p>
+<p><a class="reference external" href="http://schedule.readthedocs.io">readthedocs</a></p>
+<p><a class="reference external" href="http://github.com/dbader/schedule">git</a></p>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Сб 28 Июль 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/module.html">module</a>,      <a href="/tag/py2.html">py2</a>,      <a href="/tag/py3.html">py3</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/packages/schedule.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/packages/schedule.html&text=Schedule">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="scopes">
+
+  <title>
+    A little bit about anything
+&ndash; Область видимости переменных  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/scopes.html">Область видимости переменных</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id2">
+<h2>Области видимости</h2>
+<p>С точки зрения области видимости переменные в Perl делятся на 2 основных типа:
+- глобальные переменые пакета, объявляемые с помощью кострукции user vars или our
+- лексические переменные, объявляемые с помощью my</p>
+</div>
+<div class="section" id="id3">
+<h2>Область видимости: блок</h2>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+
+<span class="p">{</span>
+    <span class="k">my</span> <span class="nv">$email</span> <span class="o">=</span> <span class="s">&#39;foo@bar.com&#39;</span><span class="p">;</span>
+    <span class="k">print</span> <span class="s">&quot;$email\n&quot;</span><span class="p">;</span>     <span class="c1"># foo@bar.com</span>
+<span class="p">}</span>
+<span class="c1"># print $email;</span>
+<span class="c1"># $email does not exists</span>
+<span class="c1"># Global symbol &quot;$email&quot; requires explicit package name at ...</span>
+</pre></div>
+<p>Внутри анонимного блока представлено объявление переменной $email
+Переменная существует только в пределах блока, не видна на уровне модуля</p>
+</div>
+<div class="section" id="id4">
+<h2>Область видимости: везде</h2>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+
+<span class="k">my</span> <span class="nv">$lname</span> <span class="o">=</span> <span class="s">&quot;Bar&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;$lname\n&quot;</span><span class="p">;</span>        <span class="c1"># Bar</span>
+
+<span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;$lname\n&quot;</span><span class="p">;</span>    <span class="c1"># Bar</span>
+    <span class="nv">$lname</span> <span class="o">=</span> <span class="s">&quot;Other&quot;</span><span class="p">;</span>
+    <span class="k">print</span> <span class="s">&quot;$lname\n&quot;</span><span class="p">;</span>    <span class="c1"># Other</span>
+<span class="p">}</span>
+<span class="k">print</span> <span class="s">&quot;$lname\n&quot;</span><span class="p">;</span>        <span class="c1"># Other</span>
+</pre></div>
+<p>Переменная lname объявлена на уровне модуля, поэтому видна везде</p>
+</div>
+<div class="section" id="id5">
+<h2>Область видимости: локальное переопределение переменной</h2>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+
+<span class="k">my</span> <span class="nv">$fname</span> <span class="o">=</span> <span class="s">&quot;Foo&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;$fname\n&quot;</span><span class="p">;</span>        <span class="c1"># Foo</span>
+
+<span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;$fname\n&quot;</span><span class="p">;</span>    <span class="c1"># Foo</span>
+
+    <span class="k">my</span> <span class="nv">$fname</span>  <span class="o">=</span> <span class="s">&quot;Other&quot;</span><span class="p">;</span>
+    <span class="k">print</span> <span class="s">&quot;$fname\n&quot;</span><span class="p">;</span>    <span class="c1"># Other</span>
+<span class="p">}</span>
+<span class="k">print</span> <span class="s">&quot;$fname\n&quot;</span><span class="p">;</span>        <span class="c1"># Foo</span>
+</pre></div>
+<p>Переменная, объявленная на уровне модуля может быть переопределена в локальном блоке
+Тем самым глобальная переменная локально скрывается и возвращает свое значение после окончания блока</p>
+<p>Пример с множественным использованием анонимных блоков:</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+
+<span class="k">my</span> <span class="nv">$name</span>  <span class="o">=</span> <span class="s">&quot;Origin&quot;</span><span class="p">;</span>
+
+<span class="p">{</span>
+    <span class="k">my</span> <span class="nv">$name</span>  <span class="o">=</span> <span class="s">&quot;Foo&quot;</span><span class="p">;</span>
+    <span class="k">print</span> <span class="s">&quot;$name\n&quot;</span><span class="p">;</span>    <span class="c1"># Foo</span>
+<span class="p">}</span>
+<span class="p">{</span>
+    <span class="k">my</span> <span class="nv">$name</span>  <span class="o">=</span> <span class="s">&quot;Other&quot;</span><span class="p">;</span>
+    <span class="k">print</span> <span class="s">&quot;$name\n&quot;</span><span class="p">;</span>    <span class="c1"># Other</span>
+<span class="p">}</span>
+
+<span class="k">print</span> <span class="s">&quot;$name\n&quot;</span><span class="p">;</span>        <span class="c1"># Origin</span>
+</pre></div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пт 27 Июль 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/scopes.html">scopes</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/scopes.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/scopes.html&text=Область видимости переменных">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

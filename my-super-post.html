@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="features">
+
+  <title>
+    A little bit about anything
+&ndash; Особенности языка  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/my-super-post.html">Особенности языка</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id2">
+<h2>Кавычки</h2>
+<p>Двойные кавычки интерполируют переменные и специальные символы, такие как n, тогда как одинарные передают строку как есть</p>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/perl</span>
+
+<span class="nv">$a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;Value of a = $a\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&#39;Value of a = $a\n&#39;</span><span class="p">;</span>
+</pre></div>
+<pre class="literal-block">
+Value of a = 10
+Value of a = $a\n$
+</pre>
+</div>
+<div class="section" id="id3">
+<h2>Многострочный текст</h2>
+<p>Многострочный текст использует синтаксис следующего вида:</p>
+<pre class="literal-block">
+$var = &lt;&lt; &quot;&lt;metka&gt;&quot;;
+&lt;text&gt;
+&lt;metka&gt;
+</pre>
+<p>В качестве кавычек могут быть использованы как двойные, так и одинарные
+Интерполяция работает аналогично</p>
+<div class="highlight"><pre><span></span><span class="nv">$a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+<span class="nv">$var</span> <span class="o">=</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;METKA&quot;</span><span class="p">;</span>
+<span class="n">This</span> <span class="n">is</span> <span class="n">the</span> <span class="n">syntax</span> <span class="k">for</span> <span class="n">here</span> <span class="n">document</span> <span class="ow">and</span> <span class="n">it</span> <span class="n">will</span> <span class="k">continue</span>
+<span class="k">until</span> <span class="n">it</span> <span class="n">encounters</span> <span class="n">a</span> <span class="n">EOF</span> <span class="n">in</span> <span class="n">the</span> <span class="n">first</span> <span class="n">line</span><span class="o">.</span>
+<span class="n">This</span> <span class="n">is</span> <span class="k">case</span> <span class="n">of</span> <span class="n">double</span> <span class="n">quote</span> <span class="n">so</span> <span class="n">variable</span> <span class="n">value</span> <span class="n">will</span> <span class="n">be</span>
+<span class="n">interpolated</span><span class="o">.</span> <span class="n">For</span> <span class="n">example</span> <span class="n">value</span> <span class="n">of</span> <span class="n">a</span> <span class="o">=</span> <span class="nv">$a</span>
+<span class="n">METKA</span>
+<span class="k">print</span> <span class="s">&quot;$var\n&quot;</span><span class="p">;</span>
+
+<span class="nv">$var</span> <span class="o">=</span> <span class="s">&lt;&lt;&#39;</span><span class="dl">METKA</span><span class="s">&#39;;</span>
+<span class="s">This is case of single quote so variable value will be</span>
+<span class="s">interpolated. For example value of a = $a</span>
+<span class="dl">METKA</span>
+<span class="k">print</span> <span class="s">&quot;$var\n&quot;</span><span class="p">;</span>
+</pre></div>
+<pre class="literal-block">
+This is the syntax for here document and it will continue
+until it encounters a EOF in the first line.
+This is case of double quote so variable value will be
+interpolated. For example value of a = 10
+
+This is case of single quote so variable value will be
+interpolated. For example value of a = $a
+</pre>
+</div>
+<div class="section" id="id4">
+<h2>Экранирование</h2>
+<p>Экранирование выполняется аналогично python</p>
+<div class="highlight"><pre><span></span><span class="nv">$result</span> <span class="o">=</span> <span class="s">&quot;This is \&quot;number\&quot;&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;$result\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;\$result\n&quot;</span><span class="p">;</span>
+</pre></div>
+<pre class="literal-block">
+This is &quot;number&quot;
+$result
+</pre>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Ср 25 Июль 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/features.html">features</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/my-super-post.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/my-super-post.html&text=Особенности языка">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

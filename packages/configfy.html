@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="package">
+
+  <title>
+    A little bit about anything
+&ndash; Configfy  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/packages/configfy.html">Configfy</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id1">
+<h2>Описание</h2>
+<p>Библиотека представляет собой набор декораторов, которые позволяют использовать конфиги .ini для изменения аргументов методов</p>
+</div>
+<div class="section" id="id2">
+<h2>Установка</h2>
+<pre class="literal-block">
+pip install configfy
+</pre>
+</div>
+<div class="section" id="id3">
+<h2>Простой пример</h2>
+<pre class="literal-block">
+[global]
+another_name = 'Suzan Flusan'
+</pre>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">configfy</span>
+<span class="kn">from</span> <span class="nn">configfy</span> <span class="kn">import</span> <span class="n">configfy</span> <span class="k">as</span> <span class="n">cfy</span>
+
+<span class="nd">@cfy</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">another_name</span><span class="o">=</span><span class="s1">&#39;Bob&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Be nice and say hello</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hello {name}, I am {another_name}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span><span class="n">another_name</span><span class="o">=</span><span class="n">another_name</span><span class="p">))</span>
+
+
+<span class="n">hello</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">)</span>
+</pre></div>
+<pre class="literal-block">
+Hello Bob, I am Suzan Flusan!
+</pre>
+<p>Если закомментировать строку в configfy.ini, то переменная не будет учтена</p>
+</div>
+<div class="section" id="id4">
+<h2>Использование секций</h2>
+<p>По-умолчанию в качестве секции поиска параметра используется секция global, однако секцию посика можно изменить</p>
+<pre class="literal-block">
+&#64;cfy(section='greetings_section')
+</pre>
+<p>configfy.ini</p>
+<pre class="literal-block">
+[global]
+another_name = 'Suzan Flusan'
+
+[greetings_section]
+language = 'spanish'
+</pre>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">configfy</span>
+<span class="kn">from</span> <span class="nn">configfy</span> <span class="kn">import</span> <span class="n">configfy</span> <span class="k">as</span> <span class="n">cfy</span>
+
+
+<span class="nd">@cfy</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="s1">&#39;greetings_section&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">greetings</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Give a nice greeting ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;english&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hello </span><span class="si">%s</span><span class="s1">! How are you doing?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;spanish&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hola </span><span class="si">%s</span><span class="s1">! Que tal?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;german&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hallo </span><span class="si">%s</span><span class="s1">! Wie gehts?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;serbian&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Zdravo </span><span class="si">%s</span><span class="s1">! Kako si?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;!nuqneH </span><span class="si">%s</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+
+<span class="n">greetings</span><span class="p">(</span><span class="s1">&#39;Tom&#39;</span><span class="p">)</span>
+</pre></div>
+<pre class="literal-block">
+Hola Tom! Que tal?
+</pre>
+</div>
+<div class="section" id="id5">
+<h2>Меняем конфиг</h2>
+<div class="section" id="id6">
+<h3>Меняем конфиг в декораторе</h3>
+<p>По-умолчанию, используется конфиг configfy.ini. Измененим файл конфига</p>
+<pre class="literal-block">
+&#64;cfy(config='yet_another_config.ini')
+</pre>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">configfy</span>
+<span class="kn">from</span> <span class="nn">configfy</span> <span class="kn">import</span> <span class="n">configfy</span> <span class="k">as</span> <span class="n">cfy</span>
+
+
+<span class="nd">@cfy</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="s1">&#39;yet_another_config.ini&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">goodby</span><span class="p">(</span><span class="n">msg</span><span class="o">=</span><span class="s1">&#39;Goodby!&#39;</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+<span class="n">goodby</span><span class="p">()</span>
+</pre></div>
+<p>yet_another_config.ini</p>
+<pre class="literal-block">
+[global]
+msg = 'Hello mine!!'
+</pre>
+<pre class="literal-block">
+Hello mine!!
+</pre>
+</div>
+<div class="section" id="id7">
+<h3>Меняем конфиг инструкцией</h3>
+<pre class="literal-block">
+configfy.set_active_config_file('another_config.ini')
+</pre>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">configfy</span>
+<span class="kn">from</span> <span class="nn">configfy</span> <span class="kn">import</span> <span class="n">configfy</span> <span class="k">as</span> <span class="n">cfy</span>
+
+
+<span class="nd">@cfy</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="s1">&#39;greetings_section&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">greetings</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Give a nice greeting ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;english&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hello </span><span class="si">%s</span><span class="s1">! How are you doing?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;spanish&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hola </span><span class="si">%s</span><span class="s1">! Que tal?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;german&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Hallo </span><span class="si">%s</span><span class="s1">! Wie gehts?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;serbian&#39;</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Zdravo </span><span class="si">%s</span><span class="s1">! Kako si?&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;!nuqneH </span><span class="si">%s</span><span class="s1">!&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;# Current config: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">configfy</span><span class="o">.</span><span class="n">configfile</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+<span class="n">greetings</span><span class="p">(</span><span class="s1">&#39;Tom&#39;</span><span class="p">)</span>
+
+<span class="c1"># change config</span>
+<span class="n">configfy</span><span class="o">.</span><span class="n">set_active_config_file</span><span class="p">(</span><span class="s1">&#39;another_config.ini&#39;</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;# Current config: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">configfy</span><span class="o">.</span><span class="n">configfile</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+<span class="n">greetings</span><span class="p">(</span><span class="s1">&#39;Tom&#39;</span><span class="p">)</span>
+</pre></div>
+<p>configfy.ini</p>
+<pre class="literal-block">
+[global]
+another_name = 'Suzan Flusan'
+
+[greetings_section]
+language = 'spanish'
+</pre>
+<p>another_config.ini</p>
+<pre class="literal-block">
+[global]
+another_name = My_new_name
+
+
+[greetings_section]
+language = 'english'
+</pre>
+<pre class="literal-block">
+# Current config: OrderedDict([('global', {'another_name': 'Suzan Flusan'}), ('greetings_section', {'language': 'spanish'})])
+Hola Tom! Que tal?
+
+
+# Current config: OrderedDict([('global', {'another_name': 'My_new_name'}), ('greetings_section', {'language': 'english'})])
+Hello Tom! How are you doing?
+</pre>
+<p><a class="reference external" href="https://github.com/mapa17/configfy">git</a>.</p>
+</div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Чт 02 Август 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/package.html">package</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/packages/configfy.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/packages/configfy.html&text=Configfy">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

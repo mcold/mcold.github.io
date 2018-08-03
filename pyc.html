@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="compile">
+
+  <title>
+    A little bit about anything
+&ndash; Компиляция в Python  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/pyc.html">Компиляция в Python</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="pyc">
+<h2>Что такое .pyc?</h2>
+<p>Часто у непосвященных зрителей в Python возникает насущный вопрос: а что же такое файл .pyc, если Python, как известно, язык интерпретируемый?</p>
+<p>Дело обстоит в том, что перед интерпретацией Python автоматически компилирует скрипт в скомпилированный код, так называемый байтовый код, перед его запуском.
+Но происходит это не всегда. Об этом далее ...</p>
+</div>
+<div class="section" id="how-is-how">
+<h2>How is how собственно</h2>
+<p>Файл с расширением .py - это простой текстовый файл, в котором пишется код, .pyc в свою очередь это скомпилированный файл байт-кода, предназначенного для выполнения(интерпретации) в PVM (Python Virtual Machine).</p>
+<p>Во время выполнения скрипта командой вида</p>
+<pre class="literal-block">
+python &lt;script&gt;.py
+</pre>
+<p>Запуск &lt;script&gt; не считается импортом и, как следствие, не будет создан pyc.
+Если этот pyc-файл уже сгенерирован, то каждый раз, когда вы запускаете/выполняете свой py-файл, система напрямую загружает ваш pyc-файл, который не нуждается в компиляции (это сэкономит вам несколько машинных циклов процессора). После создания pyc-файла нет необходимости py-файла, если вы его не отредактируете.</p>
+<p>Теоретически ваша программа может состоять только из исходного &lt;script&gt;.py и набора скомпилированных .pyc-файлов подключаемых модулей.</p>
+</div>
+<div class="section" id="id1">
+<h2>Обновление pyc</h2>
+<p>Компиляция исходников происходит при помощи интерпретатора CPython.
+CPython компилирует исходный код в &quot;байтовый код&quot; и по соображениям производительности кэширует этот байтовый код в файловой системе всякий раз, когда исходный файл имеет изменения.
+Это значительно ускоряет загрузку модулей Python, поскольку фазу компиляции можно обойти. Когда ваш исходный файл является foo.py, CPython кэширует байтовый код в файле foo.pyc рядом с исходным кодом.</p>
+<p>В python3 механизм импорта Python расширяется для записи и поиска файлов кеш-кода в одном каталоге внутри каждого каталога пакетов Python. Этот каталог будет называться __pycache__.</p>
+<p>После создания pyc-файла нет необходимости py-файла, если вы его не отредактируете.</p>
+</div>
+<div class="section" id="id2">
+<h2>Принудительная компиляция</h2>
+<p>Если вам нужно создать файл .pyc для не импортируемого модуля, вы можете использовать модули py_compile и compileall.</p>
+<p>Модуль py_compile может вручную скомпилировать любой модуль. Один из способов - использовать функцию py_compile.compile в этом модуле в интерактивном режиме:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; import py_compile
+&gt;&gt;&gt; py_compile.compile('abc.py')
+</pre>
+<p>Данная последовательность инструкций создаст abc.pyc в том же месте, что и модуль abc.py.
+Для переопределения файла компиляции можно использовать необязательный параметр cfile.</p>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Сб 28 Июль 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/compile.html">compile</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/pyc.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/pyc.html&text=Компиляция в Python">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

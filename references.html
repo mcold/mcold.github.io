@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="type">
+
+  <title>
+    A little bit about anything
+&ndash; Ссылочность  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/references.html">Ссылочность</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id2">
+<h2>Изменяем неизменяемое</h2>
+<p>В Python типы делятся на 2 большие группы:
+* изменяемые: списки, хеши, ножества, bytesarray
+* неизменяемые: кортежи, числа, строки, frozensets, bytes</p>
+<p>В контексте ссылочности разница состоит в особенности изменений объектов содержащих идентичные ссылки.
+Переменная по сути это ссылка. Но в зависимости от типа переменной ее изменение приводит к разным результатам.
+В случае изменяемого типа изменение значения переменной приведет к идентичному изменению переменных, содержащих тоже значение, т.к. адрес переменной не изменится.
+В случае же неизменяемого типа произойдет создание новой переменной по другому адресу, что не повлияет на значения других объектов этого же типа.
+Да и под изменением переменной неизменяемого типа, конечно же, идет речь про инициализацию переменной новым значением используя старое.
+Приведем пару примеров</p>
+<pre class="literal-block">
+&gt;&gt;&gt; l1 = l2 = [1, 2, 3]
+&gt;&gt;&gt; l1[0] = 5
+&gt;&gt;&gt; l2
+[5, 2, 3]
+&gt;&gt;&gt; id(l1)
+2227495290696
+&gt;&gt;&gt; id(l2)
+2227495290696
+&gt;&gt;&gt; t1 = t2 = 1, 2, 3
+&gt;&gt;&gt; id(t1)
+2227484437528
+&gt;&gt;&gt; id(t2)
+2227484437528
+&gt;&gt;&gt; t1 = t1 + (4,)
+&gt;&gt;&gt; id(t1)
+2227491242456
+&gt;&gt;&gt; id(t2)
+2227484437528
+</pre>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Вс 29 Июль 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/type.html">type</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/references.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/references.html&text=Ссылочность">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="test">
+
+  <title>
+    A little bit about anything
+&ndash; unittest  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/packages/unittest.html">unittest</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="api">
+<h2>API</h2>
+<p>Каждый метод включает 2 аргумента сравнения и текст сообщения в качестве 3-его.</p>
+<p>assertIsInstance
+assertIs</p>
+<p>assertIn</p>
+<p>assert&lt;type&gt;Equal</p>
+<p>assertLess, assertGreater</p>
+</div>
+<div class="section" id="id1">
+<h2>Компоненты</h2>
+<div class="section" id="test-fixture">
+<h3>Test fixture</h3>
+<p>Test fixture – обеспечивает подготовку окружения для выполнения тестов, а также организацию мероприятий по их корректному завершению (например очистка ресурсов). Подготовка окружения может включать в себя создание баз данных, запуск необходим серверов и т.п.</p>
+</div>
+<div class="section" id="test-case">
+<h3>Test case</h3>
+<p>Test case – это элементарная единица тестирования, в рамках которой проверяется работа компонента тестируемой программы (метод, класс, поведение и т.п.). Для реализации этой сущности используется класс TestCase.</p>
+</div>
+<div class="section" id="test-suite">
+<h3>Test suite</h3>
+<p>Test suite – это коллекция тестов, которая может в себя включать как отдельные test case’ы так и целые коллекции (т.е. можно создавать коллекции коллекций). Коллекции используются с целью объединения тестов для совместного запуска.</p>
+</div>
+<div class="section" id="test-runner">
+<h3>Test runner</h3>
+<p>Test runner – это компонент, которые оркестрирует (координирует взаимодействие) запуск тестов и предоставляет пользователю результат их выполнения. Test runner может иметь графический интерфейс, текстовый интерфейс или возвращать какое-то заранее заданное значение, которое будет описывать результат прохождения тестов.</p>
+<p>Вся работа по написанию тестов заключается в том, что мы разрабатываем отдельные тесты в рамках test case’ов, собираем их в модули и запускаем, если нужно объединить несколько test case’ов, для их совместного запуска, они помещаются в test suite’ы, которые помимо test case’ов могут содержать другие test suite’ы.</p>
+</div>
+</div>
+<div class="section" id="testcase">
+<h2>TestCase</h2>
+<ol class="arabic simple">
+<li>Создадим файл с именем utest_calc.py</li>
+<li>Добавим в него следующий код:</li>
+</ol>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">unittest</span>
+<span class="kn">import</span> <span class="nn">calc</span>
+
+<span class="k">class</span> <span class="nc">CalcTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_add</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_sub</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_mul</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_div</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">calc</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+<ol class="arabic simple" start="3">
+<li>Запустим файл utest_calc.py</li>
+</ol>
+<pre class="literal-block">
+python -m unittest utest_calc.py
+</pre>
+<p>Такой формат запуска предполагает вывод минимальной информации. В данном случае все тесты успешно завершились.</p>
+<pre class="literal-block">
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+OK
+</pre>
+<ol class="arabic simple" start="4">
+<li>Запуск можно сделать с запросом расширенной информации по пройденным тестам, для этого необходимо добавить ключ -v:</li>
+</ol>
+<pre class="literal-block">
+python -m unittest -v utest_calc.py
+</pre>
+<p>В этом случае результат будет таким:</p>
+<pre class="literal-block">
+test_add (test_calc_v2.CalcTest) ... ok
+test_div (test_calc_v2.CalcTest) ... ok
+test_mul (test_calc_v2.CalcTest) ... ok
+test_sub (test_calc_v2.CalcTest) ... ok
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+OK
+</pre>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Вс 29 Июль 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/test.html">test</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/packages/unittest.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/packages/unittest.html&text=unittest">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

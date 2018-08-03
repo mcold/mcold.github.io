@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A little bit about anything Atom" />
+
+<meta name="keywords" content="class">
+
+  <title>
+    A little bit about anything
+&ndash; Inheritance  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/inheritance.html">Inheritance</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="inheritance-features-of-python">
+<h2>Inheritance features of Python</h2>
+</div>
+<div class="section" id="simple-case-of-inheritance">
+<h2>Simple case of inheritance</h2>
+<p>Let's create a simple example of inheritance between two classes: child and parent:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">parent_class</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m parent!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;parent func&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parent_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from parent&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">child_class</span><span class="p">(</span><span class="n">parent_class</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;child func&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">child_class</span><span class="p">()</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">parent_func</span><span class="p">()</span>
+</pre></div>
+<pre class="literal-block">
+I'm child!
+child func
+This function I got from parent
+</pre>
+<p>In this example we see the next casualties:
+- parent's function (func) is reloaded by child's function
+- inherited function (parent_func) executed as it is in parent class</p>
+</div>
+<div class="section" id="inheritance-from-multiple-parents">
+<h2>Inheritance from multiple parents</h2>
+<div class="section" id="general-case">
+<h3>General case</h3>
+<p>In general case of multiple inheritance all is pretty obious - functions which not repeated works as in parent classes
+Let's have a look on case, when child have two parents. In our event it is classes with names 'mother' and 'father'</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">father_class</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m father!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">father_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Hay from father&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">mother_class</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m mother!&quot;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">mother_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Hay from mother&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">child_class</span><span class="p">(</span><span class="n">father_class</span><span class="p">,</span> <span class="n">mother_class</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">child_class</span><span class="p">()</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">father_func</span><span class="p">()</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">mother_func</span><span class="p">()</span>
+</pre></div>
+<pre class="literal-block">
+I'm child!
+Hay from father
+Hay from mother
+</pre>
+</div>
+<div class="section" id="reloaded-functions">
+<h3>Reloaded functions</h3>
+<p>But what if we have two identical functions in two parents classes</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">father_class</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m father!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;father func&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parent_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from father&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">mother_class</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m mother!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;mother func&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parent_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from mother&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">child_class</span><span class="p">(</span><span class="n">father_class</span><span class="p">,</span> <span class="n">mother_class</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;child func&quot;</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">child_class</span><span class="p">()</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">func</span><span class="p">()</span>
+    <span class="n">item</span><span class="o">.</span><span class="n">parent_func</span><span class="p">()</span>
+</pre></div>
+<pre class="literal-block">
+I'm child!
+child func
+This function I've got from father
+</pre>
+<p>We see that executes function (parent_func) which was founded first in list of parents classes</p>
+</div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Сб 10 Март 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/class.html">class</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/inheritance.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/inheritance.html&text=Inheritance">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>
