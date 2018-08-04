@@ -531,7 +531,7 @@ Ran 4 tests in 0.002s
 OK
 &lt;/pre&gt;
 &lt;/div&gt;
-</content><category term="test"></category></entry><entry><title>Metaclass</title><link href="/metaclass.html" rel="alternate"></link><published>2018-07-29T15:20:00+02:00</published><updated>2018-07-29T15:20:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/metaclass.html</id><summary type="html">&lt;p class="first last"&gt;Используем метаклассы&lt;/p&gt;
+</content><category term="package"></category><category term="test"></category></entry><entry><title>Metaclass</title><link href="/metaclass.html" rel="alternate"></link><published>2018-07-29T15:20:00+02:00</published><updated>2018-07-29T15:20:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/metaclass.html</id><summary type="html">&lt;p class="first last"&gt;Используем метаклассы&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="py2-py3"&gt;
 &lt;h2&gt;Py2 &amp;amp; Py3&lt;/h2&gt;
 &lt;p&gt;Версии Python по разному регламентируют синтаксис метакласса&lt;/p&gt;
@@ -564,8 +564,29 @@ OK
 Отсутствие в абстрактном классе методов с декоратором &amp;#64;abstractmethod фактически не делает его абстрактным, т.е.&lt;/p&gt;
 &lt;p&gt;Простое наследоваение ABCMeta не позволяет считать его абстрактным.&lt;/p&gt;
 &lt;p&gt;Рассмотрим наглядный пример из PEP&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;abc&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;ABCMeta&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;abstractmethod&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;metaclass&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;ABCMeta&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@abstractmethod&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;  &lt;span class="c1"&gt;# raises TypeError&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;  &lt;span class="c1"&gt;# raises TypeError&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;C&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;foo&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt; &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;42&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;  &lt;span class="c1"&gt;# works&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="class"></category></entry><entry><title>Ссылочность</title><link href="/references.html" rel="alternate"></link><published>2018-07-29T10:30:00+02:00</published><updated>2018-07-29T10:30:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/references.html</id><summary type="html">&lt;p class="first last"&gt;Рассматриваем особенности ссылочности типов&lt;/p&gt;
+</content><category term="class"></category><category term="geekbrain"></category></entry><entry><title>Ссылочность</title><link href="/references.html" rel="alternate"></link><published>2018-07-29T10:30:00+02:00</published><updated>2018-07-29T10:30:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/references.html</id><summary type="html">&lt;p class="first last"&gt;Рассматриваем особенности ссылочности типов&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id2"&gt;
 &lt;h2&gt;Изменяем неизменяемое&lt;/h2&gt;
 &lt;p&gt;В Python типы делятся на 2 большие группы:
@@ -806,53 +827,7 @@ Before Setting First Name is : Mohd.
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Rango says hey there partner!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="tango"></category></entry><entry><title>Schedule</title><link href="/module/schedule.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/module/schedule.html</id><summary type="html">&lt;p class="first last"&gt;Знакомимся с пакетом для создания job-ов по расписанию&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="id1"&gt;
-&lt;h2&gt;Общая инфа&lt;/h2&gt;
-&lt;p&gt;Данный модуль предоставляет API для создания job-ов&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="api"&gt;
-&lt;h2&gt;API&lt;/h2&gt;
-&lt;p&gt;Основные классы API:
-* Job
-* CancelJob
-* Scheduler&lt;/p&gt;
-&lt;p&gt;Главным классом выступает Scheduler.
-По-умолчанию при импорте пакета создается объект Scheduler.default_scheduler, методы которого и используются для работы с job-ами.
-Метод пакета как every(self, interval=1)&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class="section" id="schedule-nssm-job-if-os-windows"&gt;
-&lt;h2&gt;schedule + nssm = job if os = Windows&lt;/h2&gt;
-&lt;p&gt;В моем случае данный пакет получил особую пользу в сочетании с унилитой &lt;a class="reference external" href="http://nssm.cc"&gt;nssm&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Данная программа позволяет создавать службы под OS Windows, что в сочетании с возможностями schedule манипулировать системой задач не хуже планировщика cron в Linux&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;schedule&lt;/span&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;time&lt;/span&gt;
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;job&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;I&amp;#39;m working...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="n"&gt;schedule&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;every&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;minutes&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;do&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;job&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;schedule&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;every&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;hour&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;do&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;job&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;schedule&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;every&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;day&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;at&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;15:05&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;do&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;job&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;schedule&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;every&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;monday&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;do&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;job&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;schedule&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;every&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;wednesday&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;at&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;13:15&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;do&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;job&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-        &lt;span class="n"&gt;schedule&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;run_pending&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-        &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-
-
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;__main__&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;a class="reference external" href="http://schedule.readthedocs.io"&gt;readthedocs&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;a class="reference external" href="http://github.com/dbader/schedule"&gt;git&lt;/a&gt;.&lt;/p&gt;
-&lt;/div&gt;
-</content><category term="module"></category><category term="py2"></category><category term="py3"></category></entry><entry><title>Schedule</title><link href="/packages/schedule.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/packages/schedule.html</id><summary type="html">&lt;p class="first last"&gt;Знакомимся с пакетом для создания job-ов по расписанию&lt;/p&gt;
+</content><category term="tango"></category></entry><entry><title>Schedule</title><link href="/packages/schedule.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/packages/schedule.html</id><summary type="html">&lt;p class="first last"&gt;Знакомимся с пакетом для создания job-ов по расписанию&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;Общая инфа&lt;/h2&gt;
 &lt;p&gt;Пакет представляет собой API для создания job-ов&lt;/p&gt;
@@ -957,7 +932,7 @@ I'm here ...
 &lt;p&gt;&lt;a class="reference external" href="http://schedule.readthedocs.io"&gt;readthedocs&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://github.com/dbader/schedule"&gt;git&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="module"></category><category term="py2"></category><category term="py3"></category></entry><entry><title>Компиляция в Python</title><link href="/pyc.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/pyc.html</id><summary type="html">&lt;p class="first last"&gt;Определяем причины необходимости компиляции модулей&lt;/p&gt;
+</content><category term="package"></category><category term="py2"></category><category term="py3"></category></entry><entry><title>Компиляция в Python</title><link href="/pyc.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/pyc.html</id><summary type="html">&lt;p class="first last"&gt;Определяем причины необходимости компиляции модулей&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="pyc"&gt;
 &lt;h2&gt;Что такое .pyc?&lt;/h2&gt;
 &lt;p&gt;Часто у непосвященных зрителей в Python возникает насущный вопрос: а что же такое файл .pyc, если Python, как известно, язык интерпретируемый?&lt;/p&gt;
