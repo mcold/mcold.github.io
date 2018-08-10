@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+
+<meta name="keywords" content="socket">
+
+  <title>
+    Many-many code
+&ndash; Socket  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html" target="_blank">python</a></li>
+        <li><a href="/category/django.html" target="_blank">django</a></li>
+        <li><a href="/category/perl.html" target="_blank">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/packages/socket/socket.html">Socket</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id1">
+<h2>Сервер</h2>
+<p>Сейчас создайте два файла — один для сервера, а другой для клиента.
+В Python для работы с сокетами используется модуль socket:</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">socket</span>
+</pre></div>
+<p>Прежде всего нам необходимо создать сокет:</p>
+<div class="highlight"><pre><span></span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">()</span>
+</pre></div>
+<p>Здесь ничего особенного нет и данная часть является общей и для клиентских и для серверных сокетов.
+Дальше мы будем писать код для сервера. Это вполне логично — зачем нам писать клиентское приложение, если некуда подключатся :)</p>
+<p>Теперь нам нужно определится с хостом и портом для нашего сервера. Насчет хоста — мы оставим строку пустой, чтобы наш сервер был доступен для всех интерфейсов. А порт возьмем любой от нуля до 65535. Следует отметить, что в большинстве операционных систем прослушивание портов с номерами 0 — 1023 требует особых привилегий. Я выбрал порт 9090. Теперь свяжем наш сокет с данными хостом и портом с помощью метода bind, которому передается кортеж, первый элемент (или нулевой, если считать от нуля) которого — хост, а второй — порт:</p>
+<div class="highlight"><pre><span></span><span class="n">sock</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">9090</span><span class="p">))</span>
+</pre></div>
+<p>Теперь у нас все готово, чтобы принимать соединения. С помощью метода listen мы запустим для данного сокета режим прослушивания.
+Метод принимает один аргумент — максимальное количество подключений в очереди.
+Напряжем нашу бурную фантазию и вспомним про зал с окошками.
+Так вот этот параметр определяет размер очереди. Если он установлен в единицу, а кто-то, явно лишний, пытается еще подстроится сзади, то его пошлют :) Установим его в единицу:</p>
+<div class="highlight"><pre><span></span><span class="n">sock</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+<p>Ну вот, наконец-то, мы можем принять подключение с помощью метода accept, который возвращает кортеж с двумя элементами: новый сокет и адрес клиента.
+Именно этот сокет и будет использоваться для приема и посылке клиенту данных.</p>
+<div class="highlight"><pre><span></span><span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+</pre></div>
+<p>Вот и все. Теперь мы установили с клиентом связь и можем с ним «общаться».
+Т.к. мы не можем точно знать, что и в каких объемах клиент нам пошлет, то мы будем получать данные от него небольшими порциями.
+Чтобы получить данные нужно воспользоваться методом recv, который в качестве аргумента принимает количество байт для чтения.
+Мы будем читать порциями по 1024 байт (или 1 кб):</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+</pre></div>
+<p>Как мы и говорили для общения с клиентом мы используем сокет, который получили в результате выполнения метода accept.
+Мы в бесконечном цикле принимаем 1024 байт данных с помощью метода recv. Если данных больше нет, то этот метод ничего не возвращает. Таким образом мы можем получать от клиента любое количество данных.</p>
+<p>Дальше в нашем примере для наглядности мы что-то сделаем с полученными данными и отправим их обратно клиенту.
+Например, с помощью метода upper у строк вернем клиенту строку в верхнем регистре.</p>
+<p>Теперь можно и закрыть соединение:</p>
+<div class="highlight"><pre><span></span><span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+<p>Собственно сервер готов. Он принимает соединение, принимает от клиента данные, возвращает их в виде строки в верхнем регистре и закрывает соединение. Все просто :)
+В итоге у вас должно было получиться следующее:</p>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">()</span>
+<span class="n">sock</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="mi">9090</span><span class="p">))</span>
+<span class="n">sock</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="s1">&#39;connected:&#39;</span><span class="p">,</span> <span class="n">addr</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">break</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="id2">
+<h2>Клиент</h2>
+<p>Думаю, что теперь будет легче. Да и само клиентское приложение проще — нам нужно создать сокет, подключиться к серверу послать ему данные, принять данные и закрыть соединение.
+Все это делается так:</p>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">()</span>
+<span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">9090</span><span class="p">))</span>
+<span class="n">sock</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="s1">&#39;hello, world!&#39;</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+<span class="n">sock</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">print</span> <span class="n">data</span>
+</pre></div>
+<p>Думаю, что все понятно, т.к. все уже разбиралось ранее.
+Единственное новое здесь — это метод connect, с помощью которого мы подключаемся к серверу.
+Дальше мы читаем 1024 байт данных и закрываем сокет.</p>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пт 10 Август 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/socket.html">socket</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/packages/socket/socket.html" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/packages/socket/socket.html&text=Socket" target="_blank">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code" target="_blank">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

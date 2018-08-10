@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+
+<meta name="keywords" content="multiprocessing, process">
+
+  <title>
+    Many-many code
+&ndash; Lock  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html" target="_blank">python</a></li>
+        <li><a href="/category/django.html" target="_blank">django</a></li>
+        <li><a href="/category/perl.html" target="_blank">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/packages/multiprocessing/lock.html">Lock</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
+
+
+<span class="k">def</span> <span class="nf">printer</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">lock</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Выводим то что передали</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tango&#39;</span><span class="p">,</span> <span class="s1">&#39;foxtrot&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">printer</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">lock</span><span class="p">))</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+<p>Здесь мы создали простую функцию вывода, которая выводит все, что вы ей передаете.
+Чтобы не дать процессам конфликтовать друг с другом, мы используем объект Lock. Этот код зациклится над нашим списком трех объектов и создаст процесс для каждого из них. Каждый процесс будет вызывать нашу функцию, и передавать её одному из объектов.
+Так как мы используем замки, следующий процесс в строке будет ждать, пока замок не снимается, после чего он сможет продолжить.</p>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пт 10 Август 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/multiprocessing.html">multiprocessing</a>,      <a href="/tag/process.html">process</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/packages/multiprocessing/lock.html" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/packages/multiprocessing/lock.html&text=Lock" target="_blank">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code" target="_blank">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

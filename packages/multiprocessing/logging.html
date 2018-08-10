@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+
+<meta name="keywords" content="multiprocessing, process">
+
+  <title>
+    Many-many code
+&ndash; Logging  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html" target="_blank">python</a></li>
+        <li><a href="/category/django.html" target="_blank">django</a></li>
+        <li><a href="/category/perl.html" target="_blank">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/packages/multiprocessing/logging.html">Logging</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <p>Логирование процессов немного отличается от логирования потоков.
+Причина в том, что пакет logging не использует замки, предназначенные для процессов, так что в итоге вы можете получить результат, который состоит из кучи перемешанных между собой процессов.
+Давайте попробуем добавить базовый логгинг к предыдущему примеру</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Lock</span>
+
+
+<span class="k">def</span> <span class="nf">printer</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">lock</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Выводим то что передали</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">lock</span> <span class="o">=</span> <span class="n">Lock</span><span class="p">()</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tango&#39;</span><span class="p">,</span> <span class="s1">&#39;foxtrot&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+    <span class="n">multiprocessing</span><span class="o">.</span><span class="n">log_to_stderr</span><span class="p">()</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">printer</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">lock</span><span class="p">))</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+<p>Простейший способ вести журнал, это отправить все на stderr.
+Мы можем сделать это, вызвав функцию log_to_stderr().
+Далее мы вызываем функцию get_logger для получения доступа к логгеру и настраиваем его уровень логгинга на INFO.
+Остальная часть кода остается такой же, какой и была.
+Обратите внимание на то, что я не вызываю метод join() здесь.
+Вместо этого, поток parent (другими словами, ваш скрипт) вызовет join() лично. Когда вы сделаете это, вы получите что-то на подобие:</p>
+<pre class="literal-block">
+[INFO/Process-1] child process calling self.run()
+tango
+[INFO/Process-1] process shutting down
+[INFO/Process-1] process exiting with exitcode 0
+[INFO/Process-2] child process calling self.run()
+[INFO/MainProcess] process shutting down
+foxtrot
+[INFO/Process-2] process shutting down
+[INFO/Process-3] child process calling self.run()
+[INFO/Process-2] process exiting with exitcode 0
+10
+[INFO/MainProcess] calling join() for process Process-3
+[INFO/Process-3] process shutting down
+[INFO/Process-3] process exiting with exitcode 0
+[INFO/MainProcess] calling join() for process Process-2
+</pre>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пт 10 Август 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/multiprocessing.html">multiprocessing</a>,      <a href="/tag/process.html">process</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/packages/multiprocessing/logging.html" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/packages/multiprocessing/logging.html&text=Logging" target="_blank">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code" target="_blank">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

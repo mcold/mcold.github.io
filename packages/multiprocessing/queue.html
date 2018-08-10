@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+
+<meta name="keywords" content="multiprocessing, process">
+
+  <title>
+    Many-many code
+&ndash; Queue  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html" target="_blank">python</a></li>
+        <li><a href="/category/django.html" target="_blank">django</a></li>
+        <li><a href="/category/perl.html" target="_blank">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/packages/multiprocessing/queue.html">Queue</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <p>Когда речь заходит о связи между процессами, модули нашего multiprocessing включают в себя два главных метода: Queue и Pipe.
+Работа Queue защищена как от процессов, так и от потоков.
+Давайте взглянем на достаточно простой пример:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Queue</span>
+
+
+<span class="n">sentinel</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">creator</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates data to be consumed and waits for the consumer</span>
+<span class="sd">    to finish processing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Creating data and putting it on the queue&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+        <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">my_consumer</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Consumes some data and works on it</span>
+<span class="sd">    In this case, all it does is double the input</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;data found to be processed: {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+        <span class="n">processed</span> <span class="o">=</span> <span class="n">data</span> <span class="o">*</span> <span class="mi">2</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">processed</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">sentinel</span><span class="p">:</span>
+            <span class="k">break</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">process_one</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">creator</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">q</span><span class="p">))</span>
+    <span class="n">process_two</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">my_consumer</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">q</span><span class="p">,))</span>
+
+    <span class="n">process_one</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="n">process_two</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="n">q</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">q</span><span class="o">.</span><span class="n">join_thread</span><span class="p">()</span>
+
+    <span class="n">process_one</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">process_two</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</pre></div>
+<p>Здесь нам только и нужно, что импортировать Process и Queue.
+Далее мы создаем две функции, одна для создания данных и добавления их в очередь, и вторая для использования данных и обработки их.
+Добавление данных в Queue выполняется при помощи метода put(), в то время как получение данных из Queue выполняется через метод get.
+Последний кусок кода только создает объект Queue и несколько экземпляров Process, после чего возвращает их.
+Обратите внимание на то, что мы вызываем join() в наших объектах process больше, чем Queue.</p>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пт 10 Август 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/multiprocessing.html">multiprocessing</a>,      <a href="/tag/process.html">process</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/packages/multiprocessing/queue.html" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/packages/multiprocessing/queue.html&text=Queue" target="_blank">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code" target="_blank">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

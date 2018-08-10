@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+
+<meta name="keywords" content="type, dictionary">
+
+  <title>
+    Many-many code
+&ndash; Методы словаря  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html" target="_blank">python</a></li>
+        <li><a href="/category/django.html" target="_blank">django</a></li>
+        <li><a href="/category/perl.html" target="_blank">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/dictionary/methods.html">Методы словаря</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="clear">
+<h2>clear</h2>
+<p>Очищает словарь</p>
+</div>
+<div class="section" id="get">
+<h2>get</h2>
+<p>Возвращает значение по ключу
+Не вызывает ошибку даже если ключ отсутствует</p>
+<pre class="literal-block">
+d.get(&lt;key&gt;[, &lt;default&gt;])
+</pre>
+<pre class="literal-block">
+&gt;&gt;&gt; d = {'a': 10, 'b': 20, 'c': 30}
+
+&gt;&gt;&gt; print(d.get('b'))
+20
+&gt;&gt;&gt; print(d.get('z'))
+None
+</pre>
+</div>
+<div class="section" id="items">
+<h2>items</h2>
+<p>Возвращает list кортежей в виде пар key-value</p>
+</div>
+<div class="section" id="update">
+<h2>update</h2>
+<p>Обновляет/Megre-ит значение по записи либо по словарю</p>
+<pre class="literal-block">
+&gt;&gt;&gt; d1 = {'a': 10, 'b': 20, 'c': 30}
+&gt;&gt;&gt; d1.update(b=200, d=400)
+&gt;&gt;&gt; d1
+{'a': 10, 'c': 30, 'b': 200, 'd': 400}
+&gt;&gt;&gt; d2 = {'a': 10, 'b': 20, 'c': 30}
+&gt;&gt;&gt; d1.update(d2)
+&gt;&gt;&gt; d1
+{'a': 10, 'c': 30, 'b': 20, 'd': 400}
+</pre>
+</div>
+<div class="section" id="pop">
+<h2>pop</h2>
+<p>Удалет ключ и возвращает значение
+При отсутствии ключа падает ошибка</p>
+</div>
+<div class="section" id="popitem">
+<h2>popitem</h2>
+<p>Рандомно выбирает ключ и выполняет pop</p>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пт 10 Август 2018</p>
+    <p>Category: <a href="/category/python.html">python</a>
+ &ndash; Tags:
+      <a href="/tag/type.html">type</a>,      <a href="/tag/dictionary.html">dictionary</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/dictionary/methods.html" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/dictionary/methods.html&text=Методы словаря" target="_blank">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code" target="_blank">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

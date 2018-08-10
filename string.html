@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+
+<meta name="keywords" content="geekbrain, string">
+
+  <title>
+    Many-many code
+&ndash; Обработка строк  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html" target="_blank">python</a></li>
+        <li><a href="/category/django.html" target="_blank">django</a></li>
+        <li><a href="/category/perl.html" target="_blank">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/string.html">Обработка строк</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <p>Подопытная строка:</p>
+<div class="highlight"><pre><span></span><span class="k">my</span> <span class="nv">$str</span> <span class="o">=</span> <span class="s">&quot;Show MUsT Go ON&quot;</span><span class="p">;</span>
+</pre></div>
+<div class="section" id="upper-lower-case">
+<h2>Upper &amp; Lower case-ы</h2>
+<p>Приведение строки к регистру</p>
+<div class="highlight"><pre><span></span><span class="k">my</span> <span class="nv">$upstr</span> <span class="o">=</span> <span class="nb">uc</span><span class="p">(</span><span class="nv">$str</span><span class="p">);</span>
+<span class="k">print</span><span class="p">(</span><span class="nv">$upstr</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+
+<span class="k">my</span> <span class="nv">$lowstr</span> <span class="o">=</span> <span class="nb">lc</span><span class="p">(</span><span class="nv">$str</span><span class="p">);</span>
+<span class="k">print</span><span class="p">(</span><span class="nv">$lowstr</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="section" id="id2">
+<h2>Изменение регистра 1-ого символа строки</h2>
+<div class="highlight"><pre><span></span><span class="k">my</span> <span class="nv">$upfirst</span> <span class="o">=</span> <span class="nb">ucfirst</span><span class="p">(</span><span class="nv">$str</span><span class="p">);</span>
+<span class="k">print</span><span class="p">(</span><span class="nv">$upfirst</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+
+<span class="k">my</span> <span class="nv">$lowfirst</span> <span class="o">=</span> <span class="nb">lcfirst</span><span class="p">(</span><span class="nv">$str</span><span class="p">);</span>
+<span class="k">print</span><span class="p">(</span><span class="nv">$lowfirst</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+</pre></div>
+<pre class="literal-block">
+Show MUsT Go ON
+show MUsT Go ON
+</pre>
+</div>
+<div class="section" id="id3">
+<h2>=~ (проверка соответствия строки маске)</h2>
+<p>проверки наличия подстроки в строке</p>
+<div class="highlight"><pre><span></span><span class="k">my</span> <span class="nv">$var</span> <span class="o">=</span> <span class="nv">$str</span><span class="o">=~</span><span class="sr">/ON/</span><span class="p">;</span>
+<span class="k">print</span><span class="p">(</span><span class="nv">$var</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+</pre></div>
+<pre class="literal-block">
+1
+</pre>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;chmod 755 test.cgi&quot;</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="nv">$string</span><span class="o">=~</span><span class="sr">/[a-z]+\s\d+\s.*/</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">print</span> <span class="s">&quot;верно&quot;</span><span class="p">;</span>
+            <span class="p">}</span>
+
+<span class="c1">#     &#39;chmod&#39; -- [a-z]+   - 1 или больше букв</span>
+<span class="c1">#         &#39; &#39; -- \s       - 1 пробел</span>
+<span class="c1">#       &#39;755&#39; -- \d+      - 1 или больше цифр</span>
+<span class="c1">#         &#39; &#39; -- \s       - 1 пробел</span>
+<span class="c1">#  &#39;test.cgi&#39; -- .*       - дальше идут любые символы</span>
+</pre></div>
+<p>проверка, e-mail адреса</p>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;billgates@microsoft.com&quot;</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="nv">$string</span><span class="o">=~</span><span class="sr">/\w+\@\w+\.\w+/</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">print</span> <span class="s">&quot;верно&quot;</span><span class="p">;</span>
+            <span class="p">}</span>
+
+<span class="c1"># &#39;billgates&#39; -- \w+      - 1 или больше букв/цифр</span>
+<span class="c1">#         &#39;@&#39; -- \@       - символ @</span>
+<span class="c1"># &#39;microsoft&#39; -- \w+      - 1 или больше букв/цифр</span>
+<span class="c1">#         &#39;.&#39; -- \.       - символ .</span>
+<span class="c1">#       &#39;com&#39; -- \w+      - 1 или больше букв/цифр</span>
+</pre></div>
+</div>
+<div class="section" id="id4">
+<h2>!~ (проверка несоответствия строки маске)</h2>
+<p>Этот оператор является обратным оператору =~ (так же как != явл обратным по отношению к ==)</p>
+</div>
+<div class="section" id="tr">
+<h2>tr (перевод)</h2>
+<p>Задачу смена регистра можно решить и способом замены символов</p>
+<div class="highlight"><pre><span></span><span class="nv">$str</span><span class="o">=~</span><span class="nb">tr</span><span class="sr">/A-Z/</span><span class="n">a</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="p">;</span>
+<span class="k">print</span><span class="p">(</span><span class="nv">$str</span><span class="p">);</span>
+</pre></div>
+<pre class="literal-block">
+show must go on
+</pre>
+<p>Меняем пробелы на табы</p>
+<div class="highlight"><pre><span></span><span class="nv">$str</span><span class="o">=~</span><span class="nb">tr</span><span class="sr">/ /</span><span class="o">\</span><span class="n">t</span><span class="o">/</span><span class="p">;</span>
+<span class="k">print</span><span class="p">(</span><span class="nv">$str</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">);</span>
+</pre></div>
+<pre class="literal-block">
+Show    MUsT    Go      ON
+</pre>
+<p>Аргументами этой функции эвляются две маски с одинаковым количеством элементов.</p>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="nb">tr</span><span class="sr">/SEARCHLIST/</span><span class="n">REPLACELIST</span><span class="o">/</span><span class="p">;</span>
+</pre></div>
+<p>А занимается она тем, что заменяет элемент из SEARCHLIST соответствующим элементом из REPLACELIST.</p>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;testing&quot;</span><span class="p">;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="nb">tr</span><span class="sr">/et/</span><span class="n">ET</span><span class="p">;</span>      <span class="c1"># Сейчас $string=&quot;TEsTing&quot;;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="nb">tr</span><span class="sr">/a-z/</span><span class="n">A</span><span class="o">-</span><span class="n">Z</span><span class="o">/</span><span class="p">;</span>   <span class="c1"># А сейчас $string=&quot;TESTING&quot;;</span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;I+like+CGI&quot;</span><span class="p">;</span>
+<span class="nv">$string</span><span class="o">~</span><span class="nb">tr</span><span class="sr">/+/</span> <span class="o">/</span><span class="p">;</span>        <span class="c1"># Сейчас $string=&quot;I Like CGI&quot;</span>
+</pre></div>
+</div>
+<div class="section" id="s">
+<h2>s (замена)</h2>
+<p>Эта функция заменяет часть строки, соответствующую PATTERN на REPLACE.</p>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="sr">s/PATTERN/REPLACE/eg</span><span class="p">;</span>
+</pre></div>
+<p>Где 'e' и 'g' - необязательные параметры:</p>
+<p>g - заменяет все встречающиеся части строка, соответствующие PATTERN. Если этот параметр опущен - заменяет только первое соответствие.
+e - означает что REPALCE является выражением, а не просто строкой (в REPLACE содержатся переменные)</p>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;i:love:perl&quot;</span><span class="p">;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="sr">s/:/*/</span><span class="p">;</span>      <span class="c1"># now $string=&quot;i*love:perl&quot;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="sr">s/:/*/</span><span class="p">;</span>      <span class="c1"># now $string=&quot;i*love*perl&quot;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="sr">s/*/+/g</span><span class="p">;</span>     <span class="c1"># now $string=&quot;i+love+perl&quot;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="sr">s/+/ /g</span><span class="p">;</span>     <span class="c1"># now $string=&quot;i love perl&quot;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="sr">s/perl/cgi/</span><span class="p">;</span> <span class="c1"># now $string=&quot;i love cgi&quot;</span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;i love perl&quot;</span><span class="p">;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="sr">s/(love)/&lt;$1&gt;/</span><span class="p">;</span>   <span class="c1"># теперь $string=&quot;i  perl&quot;</span>
+</pre></div>
+<div class="highlight"><pre><span></span>    <span class="nv">$string</span><span class="o">=</span><span class="s">&quot;www22cgi44&quot;</span><span class="p">;</span>
+    <span class="nv">$string</span><span class="o">=~</span><span class="sr">s/(\d+)/$1*3/eg</span><span class="p">;</span>   <span class="c1">#сейчас $string=&quot;www66cgi132&quot;;</span>
+<span class="c1"># Параметр &#39;e&#39; показывает</span>
+<span class="c1"># что $1*2 - вычисление, а не просто строка</span>
+</pre></div>
+</div>
+<div class="section" id="pattern">
+<h2>/pattern/</h2>
+<p>Работу этой функции поясняют примеры:</p>
+<p>Пример 1:</p>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;chmod 711 cgi&quot;</span><span class="p">;</span>
+<span class="nv">$string</span><span class="o">=~</span><span class="sr">/(\w+)\s+(\d+)\s+(\w+)/</span><span class="p">;</span>
+<span class="k">print</span> <span class="nv">$1</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="nv">$2</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="nv">$3</span><span class="o">.</span><span class="s">&quot;\n&quot;</span><span class="p">;</span>
+</pre></div>
+<pre class="literal-block">
+chmod
+711
+cgi
+</pre>
+<p>(w+) соответствует любому количуству букв. Соотвествие, найденное в строке будет присвоено переменной $1.
+s+ соответствует любому количуству пробелов.
+(d+) соответствует любому количуству цифр. Соотвествие, найденное в строке будет присвоено переменной $2.
+Теперь $1=&quot;chmod&quot;, $2=&quot;711&quot;</p>
+<p>Пример 2:</p>
+<div class="highlight"><pre><span></span><span class="nv">$string</span><span class="o">=</span><span class="s">&quot;chmod 711 cgi&quot;</span><span class="p">;</span>
+<span class="nv">@list</span><span class="o">=</span><span class="nb">split</span><span class="p">(</span><span class="sr">/\s+/</span><span class="p">,</span><span class="nv">$string</span><span class="p">);</span> <span class="c1"># разбить строку $string,</span>
+                            <span class="c1"># используя пробелы</span>
+                            <span class="c1"># в качестве разделителей</span>
+</pre></div>
+<p>Получим массив:</p>
+<div class="highlight"><pre><span></span><span class="nv">@list</span><span class="o">=</span><span class="p">(</span><span class="s">&quot;chmod&quot;</span><span class="p">,</span><span class="s">&quot;711&quot;</span><span class="p">,</span><span class="s">&quot;cgi&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Ср 08 Август 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/geekbrain.html">geekbrain</a>,      <a href="/tag/string.html">string</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/string.html" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/string.html&text=Обработка строк" target="_blank">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code" target="_blank">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>
