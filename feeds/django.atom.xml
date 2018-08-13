@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>A little bit about anything - django</title><link href="/" rel="alternate"></link><link href="/feeds/django.atom.xml" rel="self"></link><id>/</id><updated>2018-07-28T11:01:00+02:00</updated><entry><title>2. Mapping URLs</title><link href="/tango/mapping_urls.html" rel="alternate"></link><published>2018-07-28T11:01:00+02:00</published><updated>2018-07-28T11:01:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/mapping_urls.html</id><summary type="html">&lt;p class="first last"&gt;Mapping urls of application into project&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Many-many code - django</title><link href="/" rel="alternate"></link><link href="/feeds/django.atom.xml" rel="self"></link><id>/</id><updated>2018-07-28T11:01:00+03:00</updated><entry><title>2. Mapping URLs</title><link href="/tango/mapping_urls.html" rel="alternate"></link><published>2018-07-28T11:01:00+03:00</published><updated>2018-07-28T11:01:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/mapping_urls.html</id><summary type="html">&lt;p class="first last"&gt;Mapping urls of application into project&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="tango-urls-py"&gt;
 &lt;h2&gt;tango.urls.py&lt;/h2&gt;
 &lt;p&gt;Подключаем url-ы rango приложения&lt;/p&gt;
@@ -33,7 +33,7 @@
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Rango says hey there partner!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="tango"></category></entry><entry><title>1. Init Project &amp; create application</title><link href="/tango/init.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/init.html</id><summary type="html">&lt;p class="first last"&gt;Инициализируем проект и приложение&lt;/p&gt;
+</content><category term="tango"></category></entry><entry><title>1. Init Project &amp; create application</title><link href="/tango/init.html" rel="alternate"></link><published>2018-07-28T11:00:00+03:00</published><updated>2018-07-28T11:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/init.html</id><summary type="html">&lt;p class="first last"&gt;Инициализируем проект и приложение&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="initialize-project"&gt;
 &lt;h2&gt;Initialize project&lt;/h2&gt;
 &lt;pre class="literal-block"&gt;
@@ -101,7 +101,7 @@ python manage.py startapp rango
 &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="tango"></category></entry><entry><title>0. Preview Tango Tutorial</title><link href="/tango/preview.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/preview.html</id><summary type="html">&lt;p class="first last"&gt;Описание курса&lt;/p&gt;
+</content><category term="tango"></category></entry><entry><title>0. Preview Tango Tutorial</title><link href="/tango/preview.html" rel="alternate"></link><published>2018-07-28T11:00:00+03:00</published><updated>2018-07-28T11:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/preview.html</id><summary type="html">&lt;p class="first last"&gt;Описание курса&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="about"&gt;
 &lt;h2&gt;About&lt;/h2&gt;
 &lt;p&gt;Данная серия уроков предназначена для прохождения туториала &lt;a class="reference external" href="http://www.tangowithdjango.com"&gt;tango with django&lt;/a&gt;&lt;/p&gt;

@@ -1,5 +1,506 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>A little bit about anything</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2018-08-02T13:20:00+02:00</updated><entry><title>Configfy</title><link href="/packages/configfy.html" rel="alternate"></link><published>2018-08-02T13:20:00+02:00</published><updated>2018-08-02T13:20:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-02:/packages/configfy.html</id><summary type="html">&lt;p class="first last"&gt;Обзор пакета configfy&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Many-many code</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2018-08-10T12:40:00+03:00</updated><entry><title>Socket</title><link href="/packages/socket/socket.html" rel="alternate"></link><published>2018-08-10T12:40:00+03:00</published><updated>2018-08-10T12:40:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/packages/socket/socket.html</id><summary type="html">&lt;p class="first last"&gt;Учимся работать с сокетами&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;Сервер&lt;/h2&gt;
+&lt;p&gt;Сейчас создайте два файла — один для сервера, а другой для клиента.
+В Python для работы с сокетами используется модуль socket:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;socket&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Прежде всего нам необходимо создать сокет:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Здесь ничего особенного нет и данная часть является общей и для клиентских и для серверных сокетов.
+Дальше мы будем писать код для сервера. Это вполне логично — зачем нам писать клиентское приложение, если некуда подключатся :)&lt;/p&gt;
+&lt;p&gt;Теперь нам нужно определится с хостом и портом для нашего сервера. Насчет хоста — мы оставим строку пустой, чтобы наш сервер был доступен для всех интерфейсов. А порт возьмем любой от нуля до 65535. Следует отметить, что в большинстве операционных систем прослушивание портов с номерами 0 — 1023 требует особых привилегий. Я выбрал порт 9090. Теперь свяжем наш сокет с данными хостом и портом с помощью метода bind, которому передается кортеж, первый элемент (или нулевой, если считать от нуля) которого — хост, а второй — порт:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bind&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9090&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Теперь у нас все готово, чтобы принимать соединения. С помощью метода listen мы запустим для данного сокета режим прослушивания.
+Метод принимает один аргумент — максимальное количество подключений в очереди.
+Напряжем нашу бурную фантазию и вспомним про зал с окошками.
+Так вот этот параметр определяет размер очереди. Если он установлен в единицу, а кто-то, явно лишний, пытается еще подстроится сзади, то его пошлют :) Установим его в единицу:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Ну вот, наконец-то, мы можем принять подключение с помощью метода accept, который возвращает кортеж с двумя элементами: новый сокет и адрес клиента.
+Именно этот сокет и будет использоваться для приема и посылке клиенту данных.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;addr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;accept&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Вот и все. Теперь мы установили с клиентом связь и можем с ним «общаться».
+Т.к. мы не можем точно знать, что и в каких объемах клиент нам пошлет, то мы будем получать данные от него небольшими порциями.
+Чтобы получить данные нужно воспользоваться методом recv, который в качестве аргумента принимает количество байт для чтения.
+Мы будем читать порциями по 1024 байт (или 1 кб):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;recv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;break&lt;/span&gt;
+    &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;upper&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Как мы и говорили для общения с клиентом мы используем сокет, который получили в результате выполнения метода accept.
+Мы в бесконечном цикле принимаем 1024 байт данных с помощью метода recv. Если данных больше нет, то этот метод ничего не возвращает. Таким образом мы можем получать от клиента любое количество данных.&lt;/p&gt;
+&lt;p&gt;Дальше в нашем примере для наглядности мы что-то сделаем с полученными данными и отправим их обратно клиенту.
+Например, с помощью метода upper у строк вернем клиенту строку в верхнем регистре.&lt;/p&gt;
+&lt;p&gt;Теперь можно и закрыть соединение:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Собственно сервер готов. Он принимает соединение, принимает от клиента данные, возвращает их в виде строки в верхнем регистре и закрывает соединение. Все просто :)
+В итоге у вас должно было получиться следующее:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class="c1"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;socket&lt;/span&gt;
+
+&lt;span class="n"&gt;sock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;bind&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9090&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;listen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;addr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;accept&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;connected:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;addr&lt;/span&gt;
+
+&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;recv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;break&lt;/span&gt;
+    &lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;upper&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+
+&lt;span class="n"&gt;conn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;Клиент&lt;/h2&gt;
+&lt;p&gt;Думаю, что теперь будет легче. Да и само клиентское приложение проще — нам нужно создать сокет, подключиться к серверу послать ему данные, принять данные и закрыть соединение.
+Все это делается так:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class="c1"&gt;# -*- coding: utf-8 -*-&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;socket&lt;/span&gt;
+
+&lt;span class="n"&gt;sock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9090&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello, world!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;recv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Думаю, что все понятно, т.к. все уже разбиралось ранее.
+Единственное новое здесь — это метод connect, с помощью которого мы подключаемся к серверу.
+Дальше мы читаем 1024 байт данных и закрываем сокет.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="socket"></category></entry><entry><title>Queue</title><link href="/packages/multiprocessing/queue.html" rel="alternate"></link><published>2018-08-10T12:30:00+03:00</published><updated>2018-08-10T12:30:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/packages/multiprocessing/queue.html</id><summary type="html">&lt;p class="first last"&gt;Класс Queue&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Когда речь заходит о связи между процессами, модули нашего multiprocessing включают в себя два главных метода: Queue и Pipe.
+Работа Queue защищена как от процессов, так и от потоков.
+Давайте взглянем на достаточно простой пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Queue&lt;/span&gt;
+
+
+&lt;span class="n"&gt;sentinel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;creator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Creates data to be consumed and waits for the consumer&lt;/span&gt;
+&lt;span class="sd"&gt;    to finish processing&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Creating data and putting it on the queue&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;put&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;my_consumer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Consumes some data and works on it&lt;/span&gt;
+&lt;span class="sd"&gt;    In this case, all it does is double the input&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;data found to be processed: {}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+        &lt;span class="n"&gt;processed&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;processed&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="ow"&gt;is&lt;/span&gt; &lt;span class="n"&gt;sentinel&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="k"&gt;break&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;q&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Queue&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;13&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="n"&gt;process_one&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;creator&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="n"&gt;process_two&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;my_consumer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="p"&gt;,))&lt;/span&gt;
+
+    &lt;span class="n"&gt;process_one&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;process_two&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;q&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join_thread&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;process_one&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;process_two&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Здесь нам только и нужно, что импортировать Process и Queue.
+Далее мы создаем две функции, одна для создания данных и добавления их в очередь, и вторая для использования данных и обработки их.
+Добавление данных в Queue выполняется при помощи метода put(), в то время как получение данных из Queue выполняется через метод get.
+Последний кусок кода только создает объект Queue и несколько экземпляров Process, после чего возвращает их.
+Обратите внимание на то, что мы вызываем join() в наших объектах process больше, чем Queue.&lt;/p&gt;
+</content><category term="multiprocessing"></category><category term="process"></category></entry><entry><title>Pool</title><link href="/packages/multiprocessing/pool.html" rel="alternate"></link><published>2018-08-10T12:20:00+03:00</published><updated>2018-08-10T12:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/packages/multiprocessing/pool.html</id><summary type="html">&lt;p class="first last"&gt;Класс Pool&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Класс Pool используется для показа пула рабочих процессов. Он включает в себя методы, которые позволяют вам разгружать задачи к рабочим процессам.
+Давайте посмотрим на простейший пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Pool&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;numbers&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;pool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Pool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;processes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pool&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;numbers&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Здесь мы создали экземпляр Pool и указали ему создать три рабочих процесса.
+Далее мы используем метод map для отображения функции для каждого процесса.
+Наконец мы выводим результат, что в нашем случае является списком: [10, 20, 40].
+Вы также можете получить результат вашего процесса в пуле, используя метод apply_async:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Pool&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;pool&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Pool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;processes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pool&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply_async&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;,))&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Так мы можем запросить результат процесса. В этом суть работы функции get. Она пытается получить наши результаты.
+Обратите внимание на то, что мы также настроили обратный отсчет, на тот случай, если что-нибудь произойдет с вызываемой нами функцией.
+Мы не хотим, чтобы она была заблокирована.&lt;/p&gt;
+</content><category term="multiprocessing"></category><category term="process"></category></entry><entry><title>Logging</title><link href="/packages/multiprocessing/logging.html" rel="alternate"></link><published>2018-08-10T12:10:00+03:00</published><updated>2018-08-10T12:10:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/packages/multiprocessing/logging.html</id><summary type="html">&lt;p class="first last"&gt;Класс logging&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Логирование процессов немного отличается от логирования потоков.
+Причина в том, что пакет logging не использует замки, предназначенные для процессов, так что в итоге вы можете получить результат, который состоит из кучи перемешанных между собой процессов.
+Давайте попробуем добавить базовый логгинг к предыдущему примеру&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;logging&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Lock&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;printer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Выводим то что передали&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;acquire&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;finally&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;release&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;lock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Lock&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;items&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tango&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;foxtrot&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;multiprocessing&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;log_to_stderr&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;logger&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;multiprocessing&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_logger&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;logger&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;setLevel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;logging&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;INFO&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;printer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Простейший способ вести журнал, это отправить все на stderr.
+Мы можем сделать это, вызвав функцию log_to_stderr().
+Далее мы вызываем функцию get_logger для получения доступа к логгеру и настраиваем его уровень логгинга на INFO.
+Остальная часть кода остается такой же, какой и была.
+Обратите внимание на то, что я не вызываю метод join() здесь.
+Вместо этого, поток parent (другими словами, ваш скрипт) вызовет join() лично. Когда вы сделаете это, вы получите что-то на подобие:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[INFO/Process-1] child process calling self.run()
+tango
+[INFO/Process-1] process shutting down
+[INFO/Process-1] process exiting with exitcode 0
+[INFO/Process-2] child process calling self.run()
+[INFO/MainProcess] process shutting down
+foxtrot
+[INFO/Process-2] process shutting down
+[INFO/Process-3] child process calling self.run()
+[INFO/Process-2] process exiting with exitcode 0
+10
+[INFO/MainProcess] calling join() for process Process-3
+[INFO/Process-3] process shutting down
+[INFO/Process-3] process exiting with exitcode 0
+[INFO/MainProcess] calling join() for process Process-2
+&lt;/pre&gt;
+</content><category term="multiprocessing"></category><category term="process"></category></entry><entry><title>Lock</title><link href="/packages/multiprocessing/lock.html" rel="alternate"></link><published>2018-08-10T12:00:00+03:00</published><updated>2018-08-10T12:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/packages/multiprocessing/lock.html</id><summary type="html">&lt;p class="first last"&gt;Класс Lock&lt;/p&gt;
+</summary><content type="html">&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Lock&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;printer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    Выводим то что передали&lt;/span&gt;
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;acquire&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;finally&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;release&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;lock&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Lock&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;items&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;tango&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;foxtrot&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;items&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;p&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;printer&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;lock&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+        &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Здесь мы создали простую функцию вывода, которая выводит все, что вы ей передаете.
+Чтобы не дать процессам конфликтовать друг с другом, мы используем объект Lock. Этот код зациклится над нашим списком трех объектов и создаст процесс для каждого из них. Каждый процесс будет вызывать нашу функцию, и передавать её одному из объектов.
+Так как мы используем замки, следующий процесс в строке будет ждать, пока замок не снимается, после чего он сможет продолжить.&lt;/p&gt;
+</content><category term="multiprocessing"></category><category term="process"></category></entry><entry><title>Process</title><link href="/packages/multiprocessing/process.html" rel="alternate"></link><published>2018-08-10T11:40:00+03:00</published><updated>2018-08-10T11:40:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/packages/multiprocessing/process.html</id><summary type="html">&lt;p class="first last"&gt;Класс Process&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="id1"&gt;
+&lt;h2&gt;Множественность процессов&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;current_process&lt;/span&gt;
+
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+    &lt;span class="n"&gt;proc_name&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;current_process&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;{0} doubled to {1} by: {2}&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;proc_name&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;numbers&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;15&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;20&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;procs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+    &lt;span class="n"&gt;proc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,))&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;number&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;numbers&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;proc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;number&lt;/span&gt;&lt;span class="p"&gt;,))&lt;/span&gt;
+        &lt;span class="n"&gt;procs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;proc&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Process&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;doubler&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Test&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,))&lt;/span&gt;
+    &lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;start&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;procs&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;proc&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;procs&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;proc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+0 doubled to 40 by: Process-5
+15 doubled to 30 by: Process-4
+2 doubled to 4 by: Test
+25 doubled to 50 by: Process-6
+&lt;/pre&gt;
+&lt;/div&gt;
+</content><category term="multiprocessing"></category><category term="process"></category></entry><entry><title>Методы словаря</title><link href="/dictionary/methods.html" rel="alternate"></link><published>2018-08-10T10:00:00+03:00</published><updated>2018-08-10T10:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/dictionary/methods.html</id><summary type="html">&lt;p class="first last"&gt;Изучаем методы словарей&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="clear"&gt;
+&lt;h2&gt;clear&lt;/h2&gt;
+&lt;p&gt;Очищает словарь&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="get"&gt;
+&lt;h2&gt;get&lt;/h2&gt;
+&lt;p&gt;Возвращает значение по ключу
+Не вызывает ошибку даже если ключ отсутствует&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+d.get(&amp;lt;key&amp;gt;[, &amp;lt;default&amp;gt;])
+&lt;/pre&gt;
+&lt;pre class="literal-block"&gt;
+&amp;gt;&amp;gt;&amp;gt; d = {'a': 10, 'b': 20, 'c': 30}
+
+&amp;gt;&amp;gt;&amp;gt; print(d.get('b'))
+20
+&amp;gt;&amp;gt;&amp;gt; print(d.get('z'))
+None
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="items"&gt;
+&lt;h2&gt;items&lt;/h2&gt;
+&lt;p&gt;Возвращает list кортежей в виде пар key-value&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="update"&gt;
+&lt;h2&gt;update&lt;/h2&gt;
+&lt;p&gt;Обновляет/Megre-ит значение по записи либо по словарю&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+&amp;gt;&amp;gt;&amp;gt; d1 = {'a': 10, 'b': 20, 'c': 30}
+&amp;gt;&amp;gt;&amp;gt; d1.update(b=200, d=400)
+&amp;gt;&amp;gt;&amp;gt; d1
+{'a': 10, 'c': 30, 'b': 200, 'd': 400}
+&amp;gt;&amp;gt;&amp;gt; d2 = {'a': 10, 'b': 20, 'c': 30}
+&amp;gt;&amp;gt;&amp;gt; d1.update(d2)
+&amp;gt;&amp;gt;&amp;gt; d1
+{'a': 10, 'c': 30, 'b': 20, 'd': 400}
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="pop"&gt;
+&lt;h2&gt;pop&lt;/h2&gt;
+&lt;p&gt;Удалет ключ и возвращает значение
+При отсутствии ключа падает ошибка&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="popitem"&gt;
+&lt;h2&gt;popitem&lt;/h2&gt;
+&lt;p&gt;Рандомно выбирает ключ и выполняет pop&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="type"></category><category term="dictionary"></category></entry><entry><title>Операторы словаря</title><link href="/dictionary/operators.html" rel="alternate"></link><published>2018-08-10T10:00:00+03:00</published><updated>2018-08-10T10:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-10:/dictionary/operators.html</id><summary type="html">&lt;p class="first last"&gt;Разбираем операторы словарей&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="in-not-in"&gt;
+&lt;h2&gt;in &amp;amp; not in&lt;/h2&gt;
+&lt;p&gt;Проверка на вхождение и не вхождение элемента в словарь
+Определяется по ключам&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+&amp;gt;&amp;gt;&amp;gt; d1[(1,2)] = 'tuple'
+&amp;gt;&amp;gt;&amp;gt; t = (1,2)
+&amp;gt;&amp;gt;&amp;gt; t in d1
+True
+&lt;/pre&gt;
+&lt;/div&gt;
+</content><category term="type"></category><category term="dictionary"></category></entry><entry><title>Обработка строк</title><link href="/string.html" rel="alternate"></link><published>2018-08-08T15:00:00+03:00</published><updated>2018-08-08T15:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-08:/string.html</id><summary type="html">&lt;p class="first last"&gt;Разбираем методы обработки строк&lt;/p&gt;
+</summary><content type="html">&lt;p&gt;Подопытная строка:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Show MUsT Go ON&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="upper-lower-case"&gt;
+&lt;h2&gt;Upper &amp;amp; Lower case-ы&lt;/h2&gt;
+&lt;p&gt;Приведение строки к регистру&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$upstr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;uc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$upstr&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$lowstr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;lc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$lowstr&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;Изменение регистра 1-ого символа строки&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$upfirst&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;ucfirst&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$upfirst&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$lowfirst&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;lcfirst&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$lowfirst&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+Show MUsT Go ON
+show MUsT Go ON
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h2&gt;=~ (проверка соответствия строки маске)&lt;/h2&gt;
+&lt;p&gt;проверки наличия подстроки в строке&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$var&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;/ON/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$var&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+1
+&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;chmod 755 test.cgi&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;/[a-z]+\s\d+\s.*/&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;верно&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;#     &amp;#39;chmod&amp;#39; -- [a-z]+   - 1 или больше букв&lt;/span&gt;
+&lt;span class="c1"&gt;#         &amp;#39; &amp;#39; -- \s       - 1 пробел&lt;/span&gt;
+&lt;span class="c1"&gt;#       &amp;#39;755&amp;#39; -- \d+      - 1 или больше цифр&lt;/span&gt;
+&lt;span class="c1"&gt;#         &amp;#39; &amp;#39; -- \s       - 1 пробел&lt;/span&gt;
+&lt;span class="c1"&gt;#  &amp;#39;test.cgi&amp;#39; -- .*       - дальше идут любые символы&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;проверка, e-mail адреса&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;billgates@microsoft.com&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;/\w+\@\w+\.\w+/&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;верно&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;# &amp;#39;billgates&amp;#39; -- \w+      - 1 или больше букв/цифр&lt;/span&gt;
+&lt;span class="c1"&gt;#         &amp;#39;@&amp;#39; -- \@       - символ @&lt;/span&gt;
+&lt;span class="c1"&gt;# &amp;#39;microsoft&amp;#39; -- \w+      - 1 или больше букв/цифр&lt;/span&gt;
+&lt;span class="c1"&gt;#         &amp;#39;.&amp;#39; -- \.       - символ .&lt;/span&gt;
+&lt;span class="c1"&gt;#       &amp;#39;com&amp;#39; -- \w+      - 1 или больше букв/цифр&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id4"&gt;
+&lt;h2&gt;!~ (проверка несоответствия строки маске)&lt;/h2&gt;
+&lt;p&gt;Этот оператор является обратным оператору =~ (так же как != явл обратным по отношению к ==)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="tr"&gt;
+&lt;h2&gt;tr (перевод)&lt;/h2&gt;
+&lt;p&gt;Задачу смена регистра можно решить и способом замены символов&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="nb"&gt;tr&lt;/span&gt;&lt;span class="sr"&gt;/A-Z/&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+show must go on
+&lt;/pre&gt;
+&lt;p&gt;Меняем пробелы на табы&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="nb"&gt;tr&lt;/span&gt;&lt;span class="sr"&gt;/ /&lt;/span&gt;&lt;span class="o"&gt;\&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$str&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+Show    MUsT    Go      ON
+&lt;/pre&gt;
+&lt;p&gt;Аргументами этой функции эвляются две маски с одинаковым количеством элементов.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;tr&lt;/span&gt;&lt;span class="sr"&gt;/SEARCHLIST/&lt;/span&gt;&lt;span class="n"&gt;REPLACELIST&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;А занимается она тем, что заменяет элемент из SEARCHLIST соответствующим элементом из REPLACELIST.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;testing&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="nb"&gt;tr&lt;/span&gt;&lt;span class="sr"&gt;/et/&lt;/span&gt;&lt;span class="n"&gt;ET&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;      &lt;span class="c1"&gt;# Сейчас $string=&amp;quot;TEsTing&amp;quot;;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="nb"&gt;tr&lt;/span&gt;&lt;span class="sr"&gt;/a-z/&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;Z&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;# А сейчас $string=&amp;quot;TESTING&amp;quot;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;I+like+CGI&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="nb"&gt;tr&lt;/span&gt;&lt;span class="sr"&gt;/+/&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;        &lt;span class="c1"&gt;# Сейчас $string=&amp;quot;I Like CGI&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="s"&gt;
+&lt;h2&gt;s (замена)&lt;/h2&gt;
+&lt;p&gt;Эта функция заменяет часть строки, соответствующую PATTERN на REPLACE.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="sr"&gt;s/PATTERN/REPLACE/eg&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Где 'e' и 'g' - необязательные параметры:&lt;/p&gt;
+&lt;p&gt;g - заменяет все встречающиеся части строка, соответствующие PATTERN. Если этот параметр опущен - заменяет только первое соответствие.
+e - означает что REPALCE является выражением, а не просто строкой (в REPLACE содержатся переменные)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;i:love:perl&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;s/:/*/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;      &lt;span class="c1"&gt;# now $string=&amp;quot;i*love:perl&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;s/:/*/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;      &lt;span class="c1"&gt;# now $string=&amp;quot;i*love*perl&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;s/*/+/g&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;     &lt;span class="c1"&gt;# now $string=&amp;quot;i+love+perl&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;s/+/ /g&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;     &lt;span class="c1"&gt;# now $string=&amp;quot;i love perl&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;s/perl/cgi/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;# now $string=&amp;quot;i love cgi&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;i love perl&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;s/(love)/&amp;lt;$1&amp;gt;/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;# теперь $string=&amp;quot;i  perl&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    &lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;www22cgi44&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;s/(\d+)/$1*3/eg&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;#сейчас $string=&amp;quot;www66cgi132&amp;quot;;&lt;/span&gt;
+&lt;span class="c1"&gt;# Параметр &amp;#39;e&amp;#39; показывает&lt;/span&gt;
+&lt;span class="c1"&gt;# что $1*2 - вычисление, а не просто строка&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="pattern"&gt;
+&lt;h2&gt;/pattern/&lt;/h2&gt;
+&lt;p&gt;Работу этой функции поясняют примеры:&lt;/p&gt;
+&lt;p&gt;Пример 1:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;chmod 711 cgi&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=~&lt;/span&gt;&lt;span class="sr"&gt;/(\w+)\s+(\d+)\s+(\w+)/&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="nv"&gt;$1&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="nv"&gt;$2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="nv"&gt;$3&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+chmod
+711
+cgi
+&lt;/pre&gt;
+&lt;p&gt;(w+) соответствует любому количуству букв. Соотвествие, найденное в строке будет присвоено переменной $1.
+s+ соответствует любому количуству пробелов.
+(d+) соответствует любому количуству цифр. Соотвествие, найденное в строке будет присвоено переменной $2.
+Теперь $1=&amp;quot;chmod&amp;quot;, $2=&amp;quot;711&amp;quot;&lt;/p&gt;
+&lt;p&gt;Пример 2:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;chmod 711 cgi&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="nv"&gt;@list&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sr"&gt;/\s+/&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="nv"&gt;$string&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt; &lt;span class="c1"&gt;# разбить строку $string,&lt;/span&gt;
+                            &lt;span class="c1"&gt;# используя пробелы&lt;/span&gt;
+                            &lt;span class="c1"&gt;# в качестве разделителей&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Получим массив:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nv"&gt;@list&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;chmod&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;711&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;cgi&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="geekbrain"></category><category term="string"></category></entry><entry><title>Configfy</title><link href="/packages/configfy.html" rel="alternate"></link><published>2018-08-02T13:20:00+03:00</published><updated>2018-08-02T13:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-02:/packages/configfy.html</id><summary type="html">&lt;p class="first last"&gt;Обзор пакета configfy&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;Описание&lt;/h2&gt;
 &lt;p&gt;Библиотека представляет собой набор декораторов, которые позволяют использовать конфиги .ini для изменения аргументов методов&lt;/p&gt;
@@ -165,7 +666,7 @@ Hello Tom! How are you doing?
 &lt;p&gt;&lt;a class="reference external" href="https://github.com/mapa17/configfy"&gt;git&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</content><category term="package"></category></entry><entry><title>OOP №1</title><link href="/oop/1.html" rel="alternate"></link><published>2018-08-02T11:20:00+02:00</published><updated>2018-08-02T11:20:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-02:/oop/1.html</id><summary type="html">&lt;p class="first last"&gt;Вникаем в ООП&lt;/p&gt;
+</content><category term="package"></category></entry><entry><title>OOP №1</title><link href="/oop/1.html" rel="alternate"></link><published>2018-08-02T11:20:00+03:00</published><updated>2018-08-02T11:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-02:/oop/1.html</id><summary type="html">&lt;p class="first last"&gt;Вникаем в ООП&lt;/p&gt;
 </summary><content type="html">&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;sup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;sup&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -199,7 +700,7 @@ low
 &amp;lt;class '__main__.low'&amp;gt;
 mro low: [&amp;lt;class '__main__.low'&amp;gt;, &amp;lt;class '__main__.high'&amp;gt;, &amp;lt;class '__main__.sup'&amp;gt;, &amp;lt;class 'object'&amp;gt;]
 &lt;/pre&gt;
-</content><category term="oop"></category></entry><entry><title>Super</title><link href="/super.html" rel="alternate"></link><published>2018-07-31T10:30:00+02:00</published><updated>2018-07-31T10:30:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-31:/super.html</id><summary type="html">&lt;p class="first last"&gt;Выводим на чистую воду встроенный класс super&lt;/p&gt;
+</content><category term="oop"></category></entry><entry><title>Super</title><link href="/super.html" rel="alternate"></link><published>2018-07-31T10:30:00+03:00</published><updated>2018-07-31T10:30:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-31:/super.html</id><summary type="html">&lt;p class="first last"&gt;Выводим на чистую воду встроенный класс super&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;Наследование&lt;/h2&gt;
 &lt;p&gt;Рассмотрим типичный пример&lt;/p&gt;
@@ -446,7 +947,7 @@ high called
 mro low: [&amp;lt;class '__main__.low'&amp;gt;, &amp;lt;class '__main__.high'&amp;gt;, &amp;lt;class '__main__.addition'&amp;gt;, &amp;lt;class '__main__.sup'&amp;gt;, &amp;lt;class '__main__.next'&amp;gt;, &amp;lt;class '__main__.sup2'&amp;gt;, &amp;lt;class 'object'&amp;gt;]
 &lt;/pre&gt;
 &lt;/div&gt;
-</content><category term="class"></category></entry><entry><title>unittest</title><link href="/packages/unittest.html" rel="alternate"></link><published>2018-07-29T23:00:00+02:00</published><updated>2018-07-29T23:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/packages/unittest.html</id><summary type="html">&lt;p class="first last"&gt;Тестируем функционал при помощи пакета unittest&lt;/p&gt;
+</content><category term="class"></category></entry><entry><title>unittest</title><link href="/packages/unittest.html" rel="alternate"></link><published>2018-07-29T23:00:00+03:00</published><updated>2018-07-29T23:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/packages/unittest.html</id><summary type="html">&lt;p class="first last"&gt;Тестируем функционал при помощи пакета unittest&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="api"&gt;
 &lt;h2&gt;API&lt;/h2&gt;
 &lt;p&gt;Каждый метод включает 2 аргумента сравнения и текст сообщения в качестве 3-его.&lt;/p&gt;
@@ -531,7 +1032,7 @@ Ran 4 tests in 0.002s
 OK
 &lt;/pre&gt;
 &lt;/div&gt;
-</content><category term="package"></category><category term="test"></category></entry><entry><title>Metaclass</title><link href="/metaclass.html" rel="alternate"></link><published>2018-07-29T15:20:00+02:00</published><updated>2018-07-29T15:20:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/metaclass.html</id><summary type="html">&lt;p class="first last"&gt;Используем метаклассы&lt;/p&gt;
+</content><category term="package"></category><category term="test"></category></entry><entry><title>Metaclass</title><link href="/metaclass.html" rel="alternate"></link><published>2018-07-29T15:20:00+03:00</published><updated>2018-07-29T15:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/metaclass.html</id><summary type="html">&lt;p class="first last"&gt;Используем метаклассы&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="py2-py3"&gt;
 &lt;h2&gt;Py2 &amp;amp; Py3&lt;/h2&gt;
 &lt;p&gt;Версии Python по разному регламентируют синтаксис метакласса&lt;/p&gt;
@@ -547,7 +1048,7 @@ OK
     &lt;span class="k"&gt;pass&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="class"></category></entry><entry><title>Abstract base class</title><link href="/abstract_class.html" rel="alternate"></link><published>2018-07-29T15:00:00+02:00</published><updated>2018-07-29T15:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/abstract_class.html</id><summary type="html">&lt;p class="first last"&gt;Особенности абстрактного класса&lt;/p&gt;
+</content><category term="class"></category></entry><entry><title>Abstract base class</title><link href="/abstract_class.html" rel="alternate"></link><published>2018-07-29T15:00:00+03:00</published><updated>2018-07-29T15:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/abstract_class.html</id><summary type="html">&lt;p class="first last"&gt;Особенности абстрактного класса&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;Инициализация&lt;/h2&gt;
 &lt;p&gt;Абстрактный класс инициализируется с использованием объекта ABCMeta пакета abc в качестве метакласса.
@@ -586,7 +1087,7 @@ OK
 &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;  &lt;span class="c1"&gt;# works&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="class"></category><category term="geekbrain"></category></entry><entry><title>Ссылочность</title><link href="/references.html" rel="alternate"></link><published>2018-07-29T10:30:00+02:00</published><updated>2018-07-29T10:30:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/references.html</id><summary type="html">&lt;p class="first last"&gt;Рассматриваем особенности ссылочности типов&lt;/p&gt;
+</content><category term="class"></category><category term="geekbrain"></category></entry><entry><title>Ссылочность</title><link href="/references.html" rel="alternate"></link><published>2018-07-29T10:30:00+03:00</published><updated>2018-07-29T10:30:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/references.html</id><summary type="html">&lt;p class="first last"&gt;Рассматриваем особенности ссылочности типов&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id2"&gt;
 &lt;h2&gt;Изменяем неизменяемое&lt;/h2&gt;
 &lt;p&gt;В Python типы делятся на 2 большие группы:
@@ -619,7 +1120,7 @@ OK
 2227484437528
 &lt;/pre&gt;
 &lt;/div&gt;
-</content><category term="type"></category></entry><entry><title>Tuple</title><link href="/tuple.html" rel="alternate"></link><published>2018-07-29T10:25:00+02:00</published><updated>2018-07-29T10:25:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/tuple.html</id><summary type="html">&lt;p class="first last"&gt;Разбираем особенности использования кортежей&lt;/p&gt;
+</content><category term="type"></category></entry><entry><title>Tuple</title><link href="/tuple.html" rel="alternate"></link><published>2018-07-29T10:25:00+03:00</published><updated>2018-07-29T10:25:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-29:/tuple.html</id><summary type="html">&lt;p class="first last"&gt;Разбираем особенности использования кортежей&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;Инициализация&lt;/h2&gt;
 &lt;p&gt;Особенностью инициализации переменных данного типа является необходимость разделителя в виде запятой.
@@ -685,7 +1186,7 @@ File &amp;quot;&amp;lt;stdin&amp;gt;&amp;quot;, line 1, in &amp;lt;module&amp;gt
 TypeError: unhashable type: 'list'
 &lt;/pre&gt;
 &lt;/div&gt;
-</content><category term="type"></category></entry><entry><title>OOP</title><link href="/oop.html" rel="alternate"></link><published>2018-07-28T18:40:00+02:00</published><updated>2018-07-28T18:40:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/oop.html</id><summary type="html">&lt;p class="first last"&gt;Object-Oriented Programming in Perl&lt;/p&gt;
+</content><category term="type"></category></entry><entry><title>OOP</title><link href="/oop.html" rel="alternate"></link><published>2018-07-28T18:40:00+03:00</published><updated>2018-07-28T18:40:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/oop.html</id><summary type="html">&lt;p class="first last"&gt;Object-Oriented Programming in Perl&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="multi-modules"&gt;
 &lt;h2&gt;Multi-modules&lt;/h2&gt;
 &lt;p&gt;Прежде чем рассматривать объектно-ориентированный стиль программирования рассмотрим вариант процедурного программирования с множеством модулей&lt;/p&gt;
@@ -793,7 +1294,7 @@ Before Setting First Name is : Mohd.
 &lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</content><category term="oop"></category></entry><entry><title>2. Mapping URLs</title><link href="/tango/mapping_urls.html" rel="alternate"></link><published>2018-07-28T11:01:00+02:00</published><updated>2018-07-28T11:01:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/mapping_urls.html</id><summary type="html">&lt;p class="first last"&gt;Mapping urls of application into project&lt;/p&gt;
+</content><category term="oop"></category></entry><entry><title>2. Mapping URLs</title><link href="/tango/mapping_urls.html" rel="alternate"></link><published>2018-07-28T11:01:00+03:00</published><updated>2018-07-28T11:01:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/mapping_urls.html</id><summary type="html">&lt;p class="first last"&gt;Mapping urls of application into project&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="tango-urls-py"&gt;
 &lt;h2&gt;tango.urls.py&lt;/h2&gt;
 &lt;p&gt;Подключаем url-ы rango приложения&lt;/p&gt;
@@ -827,7 +1328,7 @@ Before Setting First Name is : Mohd.
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Rango says hey there partner!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="tango"></category></entry><entry><title>Schedule</title><link href="/packages/schedule.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/packages/schedule.html</id><summary type="html">&lt;p class="first last"&gt;Знакомимся с пакетом для создания job-ов по расписанию&lt;/p&gt;
+</content><category term="tango"></category></entry><entry><title>Schedule</title><link href="/packages/schedule.html" rel="alternate"></link><published>2018-07-28T11:00:00+03:00</published><updated>2018-07-28T11:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/packages/schedule.html</id><summary type="html">&lt;p class="first last"&gt;Знакомимся с пакетом для создания job-ов по расписанию&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;Общая инфа&lt;/h2&gt;
 &lt;p&gt;Пакет представляет собой API для создания job-ов&lt;/p&gt;
@@ -932,7 +1433,7 @@ I'm here ...
 &lt;p&gt;&lt;a class="reference external" href="http://schedule.readthedocs.io"&gt;readthedocs&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://github.com/dbader/schedule"&gt;git&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="package"></category><category term="py2"></category><category term="py3"></category></entry><entry><title>Компиляция в Python</title><link href="/pyc.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/pyc.html</id><summary type="html">&lt;p class="first last"&gt;Определяем причины необходимости компиляции модулей&lt;/p&gt;
+</content><category term="package"></category><category term="py2"></category><category term="py3"></category></entry><entry><title>Компиляция в Python</title><link href="/pyc.html" rel="alternate"></link><published>2018-07-28T11:00:00+03:00</published><updated>2018-07-28T11:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/pyc.html</id><summary type="html">&lt;p class="first last"&gt;Определяем причины необходимости компиляции модулей&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="pyc"&gt;
 &lt;h2&gt;Что такое .pyc?&lt;/h2&gt;
 &lt;p&gt;Часто у непосвященных зрителей в Python возникает насущный вопрос: а что же такое файл .pyc, если Python, как известно, язык интерпретируемый?&lt;/p&gt;
@@ -969,7 +1470,7 @@ CPython компилирует исходный код в &amp;quot;байтов
 &lt;p&gt;Данная последовательность инструкций создаст abc.pyc в том же месте, что и модуль abc.py.
 Для переопределения файла компиляции можно использовать необязательный параметр cfile.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="compile"></category></entry><entry><title>1. Init Project &amp; create application</title><link href="/tango/init.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/init.html</id><summary type="html">&lt;p class="first last"&gt;Инициализируем проект и приложение&lt;/p&gt;
+</content><category term="compile"></category></entry><entry><title>1. Init Project &amp; create application</title><link href="/tango/init.html" rel="alternate"></link><published>2018-07-28T11:00:00+03:00</published><updated>2018-07-28T11:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/init.html</id><summary type="html">&lt;p class="first last"&gt;Инициализируем проект и приложение&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="initialize-project"&gt;
 &lt;h2&gt;Initialize project&lt;/h2&gt;
 &lt;pre class="literal-block"&gt;
@@ -1037,7 +1538,7 @@ python manage.py startapp rango
 &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="tango"></category></entry><entry><title>0. Preview Tango Tutorial</title><link href="/tango/preview.html" rel="alternate"></link><published>2018-07-28T11:00:00+02:00</published><updated>2018-07-28T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/preview.html</id><summary type="html">&lt;p class="first last"&gt;Описание курса&lt;/p&gt;
+</content><category term="tango"></category></entry><entry><title>0. Preview Tango Tutorial</title><link href="/tango/preview.html" rel="alternate"></link><published>2018-07-28T11:00:00+03:00</published><updated>2018-07-28T11:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-28:/tango/preview.html</id><summary type="html">&lt;p class="first last"&gt;Описание курса&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="about"&gt;
 &lt;h2&gt;About&lt;/h2&gt;
 &lt;p&gt;Данная серия уроков предназначена для прохождения туториала &lt;a class="reference external" href="http://www.tangowithdjango.com"&gt;tango with django&lt;/a&gt;&lt;/p&gt;
@@ -1048,7 +1549,7 @@ python manage.py startapp rango
 &lt;li&gt;Pillow        5.2.0&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</content><category term="tango"></category></entry><entry><title>Область видимости переменных</title><link href="/scopes.html" rel="alternate"></link><published>2018-07-27T11:00:00+02:00</published><updated>2018-07-27T11:00:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-27:/scopes.html</id><summary type="html">&lt;p class="first last"&gt;Namespace scopes&lt;/p&gt;
+</content><category term="tango"></category></entry><entry><title>Область видимости переменных</title><link href="/scopes.html" rel="alternate"></link><published>2018-07-27T11:00:00+03:00</published><updated>2018-07-27T11:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-27:/scopes.html</id><summary type="html">&lt;p class="first last"&gt;Namespace scopes&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id2"&gt;
 &lt;h2&gt;Области видимости&lt;/h2&gt;
 &lt;p&gt;С точки зрения области видимости переменные в Perl делятся на 2 основных типа:
@@ -1124,7 +1625,7 @@ python manage.py startapp rango
 &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$name\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;        &lt;span class="c1"&gt;# Origin&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="scopes"></category></entry><entry><title>Особенности языка</title><link href="/my-super-post.html" rel="alternate"></link><published>2018-07-25T10:20:00+02:00</published><updated>2018-07-25T10:20:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-25:/my-super-post.html</id><summary type="html">&lt;p class="first last"&gt;Особенности синтксиса Perl&lt;/p&gt;
+</content><category term="scopes"></category></entry><entry><title>Особенности языка</title><link href="/my-super-post.html" rel="alternate"></link><published>2018-07-25T10:20:00+03:00</published><updated>2018-07-25T10:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-07-25:/my-super-post.html</id><summary type="html">&lt;p class="first last"&gt;Особенности синтксиса Perl&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id2"&gt;
 &lt;h2&gt;Кавычки&lt;/h2&gt;
 &lt;p&gt;Двойные кавычки интерполируют переменные и специальные символы, такие как n, тогда как одинарные передают строку как есть&lt;/p&gt;
@@ -1187,7 +1688,7 @@ This is &amp;quot;number&amp;quot;
 $result
 &lt;/pre&gt;
 &lt;/div&gt;
-</content><category term="features"></category></entry><entry><title>Global &amp; local variables</title><link href="/variables.html" rel="alternate"></link><published>2018-03-12T11:20:00+01:00</published><updated>2018-03-12T11:20:00+01:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-12:/variables.html</id><summary type="html">&lt;p class="first last"&gt;Namespace scopes&lt;/p&gt;
+</content><category term="features"></category></entry><entry><title>Global &amp; local variables</title><link href="/variables.html" rel="alternate"></link><published>2018-03-12T11:20:00+03:00</published><updated>2018-03-12T11:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-12:/variables.html</id><summary type="html">&lt;p class="first last"&gt;Namespace scopes&lt;/p&gt;
 </summary><content type="html">&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
     &lt;span class="n"&gt;s&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Local var&amp;quot;&lt;/span&gt;
     &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -1227,7 +1728,7 @@ Local var
     &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;s&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="modules"></category><category term="local"></category><category term="global"></category></entry><entry><title>Декорирование классов</title><link href="/decorator.html" rel="alternate"></link><published>2018-03-11T11:20:00+01:00</published><updated>2018-03-11T11:20:00+01:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-11:/decorator.html</id><summary type="html">&lt;p class="first last"&gt;Использование декорирования для модификации текущей реализации класса без необходимости использования стандартного механизма наследования&lt;/p&gt;
+</content><category term="modules"></category><category term="local"></category><category term="global"></category></entry><entry><title>Декорирование классов</title><link href="/decorator.html" rel="alternate"></link><published>2018-03-11T11:20:00+03:00</published><updated>2018-03-11T11:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-11:/decorator.html</id><summary type="html">&lt;p class="first last"&gt;Использование декорирования для модификации текущей реализации класса без необходимости использования стандартного механизма наследования&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id2"&gt;
 &lt;h2&gt;Простой пример декорирования процедурой&lt;/h2&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;deco&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;cls&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -1294,7 +1795,7 @@ I'm new function!
 &lt;/pre&gt;
 &lt;p&gt;В роли класса-наследника выступает класс Wrapper, который наследуется от объекта-класса, получаемого как аргумент декорируемой функции&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="decorator"></category></entry><entry><title>Peculiar properties of import packages</title><link href="/modules.html" rel="alternate"></link><published>2018-03-11T11:20:00+01:00</published><updated>2018-03-11T11:20:00+01:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-11:/modules.html</id><summary type="html">&lt;p class="first last"&gt;Special features of importing packages&lt;/p&gt;
+</content><category term="decorator"></category></entry><entry><title>Peculiar properties of import packages</title><link href="/modules.html" rel="alternate"></link><published>2018-03-11T11:20:00+03:00</published><updated>2018-03-11T11:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-11:/modules.html</id><summary type="html">&lt;p class="first last"&gt;Special features of importing packages&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;As you know in order to create a package you need to have executed the next condictions:
 - create root directory
 - create file __init__.py in root directory&lt;/p&gt;
@@ -1398,7 +1899,7 @@ So if we use instruction like&lt;/p&gt;
     &lt;span class="n"&gt;pack_func&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="modules"></category></entry><entry><title>Staticmethod</title><link href="/staticmethod.html" rel="alternate"></link><published>2018-03-11T11:20:00+01:00</published><updated>2018-03-11T11:20:00+01:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-11:/staticmethod.html</id><summary type="html">&lt;p class="first last"&gt;Реализация статических методов в классах&lt;/p&gt;
+</content><category term="modules"></category></entry><entry><title>Staticmethod</title><link href="/staticmethod.html" rel="alternate"></link><published>2018-03-11T11:20:00+03:00</published><updated>2018-03-11T11:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-11:/staticmethod.html</id><summary type="html">&lt;p class="first last"&gt;Реализация статических методов в классах&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="id1"&gt;
 &lt;h2&gt;Использование статического метода&lt;/h2&gt;
 &lt;p&gt;Статический метод (обёрнутый декоратором staticmethod) в принципе соответствует статическим методам в C++ или Java
@@ -1413,7 +1914,7 @@ So if we use instruction like&lt;/p&gt;
     &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;MyClass&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pi&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content><category term="class"></category><category term="module"></category><category term="staticmethod"></category></entry><entry><title>Inheritance</title><link href="/inheritance.html" rel="alternate"></link><published>2018-03-10T11:20:00+01:00</published><updated>2018-07-27T11:20:00+02:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-10:/inheritance.html</id><summary type="html">&lt;p class="first last"&gt;Features of inheritance&lt;/p&gt;
+</content><category term="class"></category><category term="module"></category><category term="staticmethod"></category></entry><entry><title>Inheritance</title><link href="/inheritance.html" rel="alternate"></link><published>2018-03-10T11:20:00+03:00</published><updated>2018-07-27T11:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-03-10:/inheritance.html</id><summary type="html">&lt;p class="first last"&gt;Features of inheritance&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="inheritance-features-of-python"&gt;
 &lt;h2&gt;Inheritance features of Python&lt;/h2&gt;
 &lt;/div&gt;
