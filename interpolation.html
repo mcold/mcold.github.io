@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Many-many code Atom" />
+
+<meta name="keywords" content="syntaxis">
+
+  <title>
+    Many-many code
+&ndash; Интерполяция  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/interpolation.html">Интерполяция</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id2">
+<h2>Суть интерполяции</h2>
+<p>Интерполяция в Perl подразумевает возможность вывода значения переменной в строке
+Она осуществляется при использовании двойных кавычек. Одинарные кавычки выводят простой текст</p>
+</div>
+<div class="section" id="reference-dereference">
+<h2>Reference &amp; dereference</h2>
+<p>Особый случай интерполяции достигается при использовании приема создания ссылки и ее использования</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+
+<span class="k">print</span> <span class="s">&quot;1+2 = @{[ 1 + 2]}\n&quot;</span><span class="p">;</span>
+</pre></div>
+<p>Фактически данная конструкция включает 3 этапа:
+* создание анонимного списка
+* формирование ссылки на список
+* получение списка по ссылке</p>
+<p>Аналогино работает для hash</p>
+<div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;${{key =&gt; 1+2}}{key}\n&quot;</span><span class="p">;</span>
+</pre></div>
+<pre class="literal-block">
+3
+</pre>
+<div class="highlight"><pre><span></span><span class="k">my</span> <span class="nv">%hash</span> <span class="o">=</span> <span class="nv">%</span><span class="p">{{</span><span class="mi">1</span> <span class="o">=&gt;</span> <span class="s">&#39;one&#39;</span><span class="p">,</span> <span class="mi">2</span> <span class="o">=&gt;</span> <span class="s">&#39;two&#39;</span><span class="p">}};</span>
+<span class="k">for</span> <span class="p">(</span><span class="nb">keys</span> <span class="nv">%hash</span><span class="p">){</span>
+    <span class="k">print</span> <span class="s">&quot;$_\n&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="nb">values</span> <span class="nv">%hash</span><span class="p">){</span>
+    <span class="k">print</span> <span class="s">&quot;$_\n&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<pre class="literal-block">
+1
+2
+one
+two
+</pre>
+<p>Тоже самое касается простых переменных и методов</p>
+<div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;1+2 = ${\( 1+2 )}\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;1+2 = ${\do{ 1+2 }}\n&quot;</span><span class="p">;</span>
+</pre></div>
+<p>Пример простого скаляра</p>
+<div class="highlight"><pre><span></span><span class="k">print</span> <span class="s">&quot;${\scalar localtime}\n&quot;</span><span class="p">;</span>
+</pre></div>
+<pre class="literal-block">
+Mon Aug 13 18:33:47 2018
+</pre>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пн 13 Август 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/syntaxis.html">syntaxis</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/interpolation.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/interpolation.html&text=Интерполяция">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,5 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Many-many code - perl</title><link href="/" rel="alternate"></link><link href="/feeds/perl.atom.xml" rel="self"></link><id>/</id><updated>2018-08-08T15:00:00+03:00</updated><entry><title>Обработка строк</title><link href="/string.html" rel="alternate"></link><published>2018-08-08T15:00:00+03:00</published><updated>2018-08-08T15:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-08:/string.html</id><summary type="html">&lt;p class="first last"&gt;Разбираем методы обработки строк&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Many-many code - perl</title><link href="/" rel="alternate"></link><link href="/feeds/perl.atom.xml" rel="self"></link><id>/</id><updated>2018-08-13T12:20:00+03:00</updated><entry><title>Define &amp; undef</title><link href="/define.html" rel="alternate"></link><published>2018-08-13T12:20:00+03:00</published><updated>2018-08-13T12:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-13:/define.html</id><summary type="html">&lt;p class="first last"&gt;Определенные и неопределенные значения&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="defined"&gt;
+&lt;h2&gt;Функция defined&lt;/h2&gt;
+&lt;pre class="literal-block"&gt;
+defined EXPR
+defined
+&lt;/pre&gt;
+&lt;p&gt;Функция возвращает булево значение, и отвечает на вопрос: содержит EXPR определенное значение или нет.&lt;/p&gt;
+&lt;p&gt;Функция вернет false, если переменная еще не была инициализирована или ей было присвоено значение undef. True - если переменная была инициализирована любым значением, в том числе ей может быть присвоено значение числового нуля, пустой строки или строки содержащей символ нуля.&lt;/p&gt;
+&lt;p&gt;Именно этим defined отличается от стандартной булевой проверки, которая не может отличить undef от &amp;quot;0&amp;quot;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$variable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;0&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;defined&lt;/span&gt; &lt;span class="nv"&gt;$variable&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;defined&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;undef&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$variable&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;defined&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;undef&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Результат:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+% perl defi.pl
+defined
+undef
+&lt;/pre&gt;
+&lt;p&gt;Функция undef&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+undef EXPR
+undef
+&lt;/pre&gt;
+&lt;p&gt;Функция undef всегда возвращает неопределенное значение. Если передать функции в качестве аргумента переменную - она присвоит ей неопределенное значение.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;undef&lt;/span&gt; &lt;span class="nv"&gt;$variable&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="c1"&gt;# или так&lt;/span&gt;
+&lt;span class="nv"&gt;$variable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;undef&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="nb"&gt;undef&lt;/span&gt; &lt;span class="nv"&gt;$variable&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="c1"&gt;# или так&lt;/span&gt;
+&lt;span class="nv"&gt;$variable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;undef&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Есть небольшой интересный нюанс в использовании undef - не стоит использовать эту функцию для сравнения с переменными. Сравнение заданной переменной будет выполняться с числовым нулем или пустой строкой, а не с неопределенным значением. Результатом могут стать парадоксальные ситуации и ошибки.&lt;/p&gt;
+&lt;p&gt;Пример:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$variable&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$variable&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="nb"&gt;undef&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;var is undef&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;var is defined&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;defined&lt;/span&gt; &lt;span class="nv"&gt;$variable&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;var is defined&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;var is undef&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Вывод:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+% perl defi.pl
+var is undef
+var is defined
+&lt;/pre&gt;
+&lt;/div&gt;
+</content><category term="geekbrain"></category><category term="define"></category></entry><entry><title>Интерполяция</title><link href="/interpolation.html" rel="alternate"></link><published>2018-08-13T12:20:00+03:00</published><updated>2018-08-13T12:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-13:/interpolation.html</id><summary type="html">&lt;p class="first last"&gt;Управление интерполяцией внутри выражений&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;Суть интерполяции&lt;/h2&gt;
+&lt;p&gt;Интерполяция в Perl подразумевает возможность вывода значения переменной в строке
+Она осуществляется при использовании двойных кавычек. Одинарные кавычки выводят простой текст&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference-dereference"&gt;
+&lt;h2&gt;Reference &amp;amp; dereference&lt;/h2&gt;
+&lt;p&gt;Особый случай интерполяции достигается при использовании приема создания ссылки и ее использования&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;strict&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1+2 = @{[ 1 + 2]}\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Фактически данная конструкция включает 3 этапа:
+* создание анонимного списка
+* формирование ссылки на список
+* получение списка по ссылке&lt;/p&gt;
+&lt;p&gt;Аналогино работает для hash&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;${{key =&amp;gt; 1+2}}{key}\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+3
+&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;%hash&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;%&lt;/span&gt;&lt;span class="p"&gt;{{&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;one&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;two&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;}};&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;keys&lt;/span&gt; &lt;span class="nv"&gt;%hash&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$_\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;values&lt;/span&gt; &lt;span class="nv"&gt;%hash&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$_\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+1
+2
+one
+two
+&lt;/pre&gt;
+&lt;p&gt;Тоже самое касается простых переменных и методов&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1+2 = ${\( 1+2 )}\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;1+2 = ${\do{ 1+2 }}\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Пример простого скаляра&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;${\scalar localtime}\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+Mon Aug 13 18:33:47 2018
+&lt;/pre&gt;
+&lt;/div&gt;
+</content><category term="syntaxis"></category></entry><entry><title>Обработка строк</title><link href="/string.html" rel="alternate"></link><published>2018-08-08T15:00:00+03:00</published><updated>2018-08-08T15:00:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-08:/string.html</id><summary type="html">&lt;p class="first last"&gt;Разбираем методы обработки строк&lt;/p&gt;
 </summary><content type="html">&lt;p&gt;Подопытная строка:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$str&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Show MUsT Go ON&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;

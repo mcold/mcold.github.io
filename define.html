@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Many-many code Atom" />
+
+<meta name="keywords" content="geekbrain, define">
+
+  <title>
+    Many-many code
+&ndash; Define &amp; undef  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/define.html">Define &amp; undef</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="defined">
+<h2>Функция defined</h2>
+<pre class="literal-block">
+defined EXPR
+defined
+</pre>
+<p>Функция возвращает булево значение, и отвечает на вопрос: содержит EXPR определенное значение или нет.</p>
+<p>Функция вернет false, если переменная еще не была инициализирована или ей было присвоено значение undef. True - если переменная была инициализирована любым значением, в том числе ей может быть присвоено значение числового нуля, пустой строки или строки содержащей символ нуля.</p>
+<p>Именно этим defined отличается от стандартной булевой проверки, которая не может отличить undef от &quot;0&quot;.</p>
+<div class="highlight"><pre><span></span><span class="k">my</span> <span class="nv">$variable</span> <span class="o">=</span> <span class="s">&quot;0&quot;</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nb">defined</span> <span class="nv">$variable</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;defined&quot;</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;undef&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$variable</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;defined&quot;</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;undef&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>Результат:</p>
+<pre class="literal-block">
+% perl defi.pl
+defined
+undef
+</pre>
+<p>Функция undef</p>
+<pre class="literal-block">
+undef EXPR
+undef
+</pre>
+<p>Функция undef всегда возвращает неопределенное значение. Если передать функции в качестве аргумента переменную - она присвоит ей неопределенное значение.</p>
+<div class="highlight"><pre><span></span><span class="nb">undef</span> <span class="nv">$variable</span><span class="p">;</span>
+<span class="c1"># или так</span>
+<span class="nv">$variable</span> <span class="o">=</span> <span class="nb">undef</span><span class="p">;</span>
+
+<span class="nb">undef</span> <span class="nv">$variable</span><span class="p">;</span>
+<span class="c1"># или так</span>
+<span class="nv">$variable</span> <span class="o">=</span> <span class="nb">undef</span><span class="p">;</span>
+</pre></div>
+<p>Есть небольшой интересный нюанс в использовании undef - не стоит использовать эту функцию для сравнения с переменными. Сравнение заданной переменной будет выполняться с числовым нулем или пустой строкой, а не с неопределенным значением. Результатом могут стать парадоксальные ситуации и ошибки.</p>
+<p>Пример:</p>
+<div class="highlight"><pre><span></span><span class="k">my</span> <span class="nv">$variable</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nv">$variable</span> <span class="o">==</span> <span class="nb">undef</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;var is undef&quot;</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;var is defined&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nb">defined</span> <span class="nv">$variable</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;var is defined&quot;</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">print</span> <span class="s">&quot;var is undef&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>Вывод:</p>
+<pre class="literal-block">
+% perl defi.pl
+var is undef
+var is defined
+</pre>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Пн 13 Август 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/geekbrain.html">geekbrain</a>,      <a href="/tag/define.html">define</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/define.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/define.html&text=Define &amp; undef">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>
