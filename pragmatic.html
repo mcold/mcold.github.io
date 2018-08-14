@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Many-many code Atom" />
+
+<meta name="keywords" content="package">
+
+  <title>
+    Many-many code
+&ndash; Pragmatic modules  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/pragmatic.html">Pragmatic modules</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="strict">
+<h2>strict</h2>
+<p>Отключает некоторые потенциальные фичи интерпретатора, которые делают код ненадежным.
+Без параметров включает 3 ограничения:
+- use strict 'subs'
+- use strict 'refs'
+- use strict 'vars'</p>
+<p>Их можно использовать раздельно</p>
+<div class="section" id="strict-refs">
+<h3>strict 'refs'</h3>
+<p>Запрещает разыменование по строке</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span> <span class="n">refs</span><span class="p">;</span>
+
+<span class="nv">$ref</span> <span class="o">=</span> <span class="o">\</span><span class="nv">$foo</span><span class="p">;</span>
+
+<span class="k">print</span> <span class="s">&quot;$$ref\n&quot;</span><span class="p">;</span>
+
+<span class="nv">$ref</span> <span class="o">=</span> <span class="s">&quot;foo&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;$$ref\n&quot;</span><span class="p">;</span> <span class="c1"># error</span>
+</pre></div>
+</div>
+<div class="section" id="strict-vars">
+<h3>strict 'vars'</h3>
+<p>Запрещает использовать переменные без явного указания принадлежности</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span> <span class="s">&#39;vars&#39;</span><span class="p">;</span>
+
+<span class="nv">$</span><span class="nn">Module::</span><span class="nv">a</span><span class="p">;</span>
+
+<span class="k">my</span> <span class="nv">$a</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>   <span class="c1"># переменная scope-а</span>
+<span class="k">our</span> <span class="nv">$b</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>  <span class="c1"># переменная пакета</span>
+</pre></div>
+</div>
+<div class="section" id="strict-subs">
+<h3>strict 'subs'</h3>
+<p>Запрещает разыменовывание переменных по их именам, т.е. подстановку объектов вместо bareword-ов</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Data::Dumper</span><span class="p">;</span>
+
+<span class="k">print</span> <span class="n">Dumper</span><span class="p">[</span><span class="n">test</span><span class="p">];</span> <span class="c1"># без ограничения срабатывает</span>
+</pre></div>
+<pre class="literal-block">
+$VAR1 = [
+      'test'
+    ];
+</pre>
+<p>при наличии ограничения выдает error</p>
+<p>стандартный способ использования выглядит следующим образом</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span> <span class="s">&#39;subs&#39;</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Data::Dumper</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">test</span><span class="p">{</span>
+    <span class="k">return</span> <span class="s">&#39;str&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">print</span> <span class="n">Dumper</span><span class="p">[</span><span class="n">test</span><span class="p">];</span>
+</pre></div>
+<pre class="literal-block">
+$VAR1 = [
+      'str'
+    ];
+</pre>
+</div>
+</div>
+<div class="section" id="warnings">
+<h2>warnings</h2>
+<p>Включает предупреждения</p>
+<p>В однострочниках включается ключем -w</p>
+<pre class="literal-block">
+perl -we &quot;&lt;command&gt;&quot;
+</pre>
+</div>
+<div class="section" id="diagnostics">
+<h2>diagnostics</h2>
+<p>Включает вывод подробной диагностики по каждому warning-у</p>
+<pre class="literal-block">
+perl -e 'use diagnostics; print(5 + &quot;a&quot;)';
+</pre>
+</div>
+<div class="section" id="lib">
+<h2>lib</h2>
+<p>Позволяет кодом изменить &#64;INC</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">lib</span> <span class="sx">qw(/tmp/lib)</span>
+<span class="k">BEGIN</span><span class="p">{</span><span class="nb">unshift</span><span class="p">(</span><span class="nv">@INC</span><span class="p">,</span> <span class="s">&#39;/tmp/lib&#39;</span><span class="p">)}</span>
+</pre></div>
+</div>
+<div class="section" id="findbin">
+<h2>FindBin</h2>
+<p>Используется для поиска бинарника и подключения библиотек относительно него</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">FindBin</span> <span class="sx">qw($Bin)</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">lib</span> <span class="s">&quot;$Bin/../lib&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="feature">
+<h2>feature</h2>
+<p>Включает некоторые особенности из новой версии интерпретатора.
+Многие фичи не включены, ради того, чтобы избежать конфликтов.</p>
+<p>Пример включения функции say:</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">feature</span> <span class="sx">qw(say)</span><span class="p">;</span>
+</pre></div>
+<p>Альтернативой подключения отдельных фич является включение версии, что позволяет использовать все фичи этой версии</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="mf">5.010</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="no-pragma">
+<h2>no pragma</h2>
+<p>Отключение прагматик</p>
+<div class="highlight"><pre><span></span><span class="k">no</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">no</span> <span class="nn">feature</span><span class="p">;</span>
+<span class="k">no</span> <span class="mf">5.010</span><span class="p">;</span>
+</pre></div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Вт 14 Август 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/package.html">package</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/pragmatic.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/pragmatic.html&text=Pragmatic modules">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

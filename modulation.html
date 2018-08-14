@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="russian">
+
+<head>
+
+  <link rel="stylesheet" type="text/css" href="/theme/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/theme/css/pygments.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans|PT+Serif|PT+Mono">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Michael Cold">
+  <meta name="description" content="Posts and writings by Michael Cold">
+
+  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Many-many code Atom" />
+
+<meta name="keywords" content="package">
+
+  <title>
+    Many-many code
+&ndash; Модульность  </title>
+
+</head>
+
+<body>
+  <aside>
+    <div id="user_meta">
+      <a href="">
+        <img src="/theme/images/logo.png" alt="logo">
+      </a>
+      <h3><a href="">Michael Cold</a></h3>
+      <p></p>
+      <ul>
+        <li><a href="/category/python.html">python</a></li>
+        <li><a href="/category/django.html">django</a></li>
+        <li><a href="/category/perl.html">perl</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main>
+    
+<article>
+  <div class="article_title">
+    <h3><a href="/modulation.html">Модульность</a></h3>
+  </div>
+  <hr />
+  <div class="article_text">
+    <div class="section" id="id2">
+<h2>Пакет в модуле</h2>
+<p>В Perl существует (как и в любом многоуровневом языке) разделение на namespace и модули.
+Однако в языке построение программ строится таким образом, чтобы названия пакетов совпадали с пространствами имен.
+Таким образом создавая модуль принято создавать и namespace, т.е. package.</p>
+<p>Пакет = название namespace-а.
+Это способ создания отдельной области видимости для переменных.
+Причем перечень видимых переменных ограничивается теми, что указаны с оператором our.
+Namespace можно создавать</p>
+<p>Приведем простой пример встроенного namespace-а:</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+
+<span class="p">{</span>
+    <span class="k">package</span> <span class="nn">Some</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">our</span> <span class="nv">$y</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="k">our</span> <span class="nv">@array</span> <span class="o">=</span> <span class="sx">qw(foo bar barz)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">print</span> <span class="s">&quot;$Some::x\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="s">&quot;$Some::y\n&quot;</span><span class="p">;</span>
+<span class="k">print</span> <span class="nb">join</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="p">,</span> <span class="nv">@</span><span class="nn">Some::</span><span class="nv">array</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="section" id="id3">
+<h2>Многоуровневые пакеты</h2>
+<p>Пример:</p>
+<p>.LocalMultiplier.pm</p>
+<div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">Local::Multiplier</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">m2</span><span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$x</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$x</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">m3</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$x</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$x</span> <span class="o">*</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="mi">1</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="id4">
+<h2>Блоки</h2>
+<p>Существует несколько типов блоков:</p>
+<pre class="literal-block">
+BEGIN
+END
+CHECK
+UNITCHECK
+INIT
+</pre>
+<p>Проиллюстрируем примером блок END:</p>
+<div class="highlight"><pre><span></span><span class="nb">open</span><span class="p">(</span><span class="k">my</span> <span class="nv">$fh</span><span class="p">,</span> <span class="s">&#39;&gt;&#39;</span><span class="p">,</span> <span class="nv">$file</span><span class="p">);</span>
+
+<span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">){</span>
+
+    <span class="o">...</span>
+<span class="p">}</span>
+
+<span class="k">END</span> <span class="p">{</span>
+    <span class="nb">close</span><span class="p">(</span><span class="nv">$fh</span><span class="p">);</span>
+    <span class="nb">unlink</span><span class="p">(</span><span class="nv">$file</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>Кроме блоков есть еще переменная ${^GLOBAL_PHASE}, который используется для определения блока, в котором выполняется код в данный момент</p>
+</div>
+<div class="section" id="id5">
+<h2>Порядок выполнения</h2>
+<p>sub и BEGIN выполняются перед основным кодом вне зависимости от расположения</p>
+<div class="highlight"><pre><span></span><span class="k">BEGIN</span><span class="p">{</span>
+    <span class="k">require</span> <span class="nn">Some::Module</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">test1</span><span class="p">{</span>
+    <span class="k">return</span> <span class="s">&#39;test1&#39;</span><span class="p">;</span>
+    <span class="k">sub</span> <span class="nf">test2</span><span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#39;test2&#39;</span><span class="p">;</span>
+        <span class="k">BEGIN</span><span class="p">{</span>
+            <span class="o">...</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>Обе представленные функции будут объявлены ДО выполнения программы</p>
+<p>т.е. порядок выполнения данной программы следующий:
+- BEGIN
+- объявлена функция test1
+- объявлена функция test2
+- BEGIN вложенный</p>
+</div>
+<div class="section" id="id6">
+<h2>Пространства имен</h2>
+<p>Глобальное пространство имен включает:
+* объекты текущего модуля не включенные в блоки</p>
+<p>Namespace = package
+Это способ создания определенной области видимости</p>
+<p>Для имен пакетов используются те же литералы, что и название модуля. Т.е. в модуле должен находиться пакет с таким же именем
+При использовании инструкции use мы загружаем отдельные namespace-ы пакетов.</p>
+<p>Глобальная область видимости = main package.</p>
+</div>
+<div class="section" id="main-package">
+<h2>main package</h2>
+<div class="highlight"><pre><span></span><span class="nn">main::</span><span class="n">print_size</span><span class="p">();</span>
+</pre></div>
+</div>
+<div class="section" id="state">
+<h2>state</h2>
+<p>Отличается от my тем, что инициализируется только 1 раз</p>
+</div>
+<div class="section" id="use-require">
+<h2>use &amp; require</h2>
+<p>Обе команды выполняют загрузку пространства имен пакета.</p>
+<p>Преимущества использования use:
+* принимает аргументы
+* выполняет процедуру import с аргументами в загрузчике модуля (блок BEGIN)</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">Local::Module</span><span class="p">(</span><span class="s">&#39;param1&#39;</span><span class="p">,</span> <span class="s">&#39;param2&#39;</span><span class="p">);</span>
+
+<span class="k">BEGIN</span><span class="p">{</span>
+    <span class="k">require</span> <span class="nn">Module</span><span class="p">;</span>
+    <span class="nn">Module</span> <span class="o">-&gt;</span> <span class="nb">import</span><span class="p">(</span><span class="n">LIST</span><span class="p">);</span>
+    <span class="c1"># ~ Module::import(&#39;Module&#39;, LIST);</span>
+<span class="p">}</span>
+</pre></div>
+<p>Процедура импорта будет вызвана из пакета, а не из модуля. Поэтому необходимо соблюдать конвенцию соответствия имени пакета и модуля.</p>
+<p>Чтобы отключить выполнение выполнение импорта необходим выполнить use &lt;module&gt;() с пустыми скобками</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">Module</span><span class="p">();</span>
+
+<span class="k">BEGIN</span><span class="p">{</span>
+    <span class="k">require</span> <span class="nn">Module</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="id7">
+<h2>Экспорт определенных функций</h2>
+<p>Рассмотрим для начала пример экспорта функций стандартной библиотеки</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">Local::Module</span> <span class="sx">qw(...)</span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">File::Path</span> <span class="sx">qw(make_path remove_tree)</span>
+<span class="n">make_path</span><span class="p">(</span><span class="s">&#39;parent/child&#39;</span><span class="p">);</span>
+<span class="n">remove_tree</span><span class="p">(</span><span class="s">&#39;parent/child&#39;</span><span class="p">);</span>
+</pre></div>
+<p>Попробуем настроить экспорт наших собственных функций на примере пакета LocalMultiplier.pm</p>
+<p>LocalMultiplier.pm</p>
+<div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">Local::Multiplier</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nn">Exporter</span> <span class="s">&#39;import&#39;</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">@EXPORT</span> <span class="o">=</span> <span class="sx">qw(m2 m3 m4 m5)</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">m2</span><span class="p">{</span> <span class="nb">shift</span><span class="p">()</span> <span class="o">**</span> <span class="mi">2</span><span class="p">}</span>
+<span class="k">sub</span> <span class="nf">m3</span><span class="p">{</span> <span class="nb">shift</span><span class="p">()</span> <span class="o">**</span> <span class="mi">3</span><span class="p">}</span>
+<span class="k">sub</span> <span class="nf">m4</span><span class="p">{</span> <span class="nb">shift</span><span class="p">()</span> <span class="o">**</span> <span class="mi">4</span><span class="p">}</span>
+<span class="k">sub</span> <span class="nf">m5</span><span class="p">{</span> <span class="nb">shift</span><span class="p">()</span> <span class="o">**</span> <span class="mi">5</span><span class="p">}</span>
+
+<span class="mi">1</span><span class="p">;</span>
+</pre></div>
+<p>test.pl</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">Local::Multiplier</span><span class="p">;</span>
+
+<span class="k">print</span> <span class="n">m3</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<span class="k">print</span> <span class="nn">Local::Multiplier::</span><span class="n">m3</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+
+<span class="mi">1</span><span class="p">;</span>
+</pre></div>
+<p>Также процесс экспорта можно регулировать путем экспорта группы</p>
+<p>формируем группы</p>
+<div class="highlight"><pre><span></span><span class="k">our</span> <span class="nv">%EXPORT_TAGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">odd</span>  <span class="o">=&gt;</span> <span class="p">[</span><span class="sx">qw(m3 m5)</span><span class="p">],</span>
+    <span class="n">even</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="sx">qw(m2 m4 m6)</span><span class="p">],</span>
+<span class="p">};</span>
+</pre></div>
+<p>экспортируем группу odd</p>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">Local::Multiplier</span> <span class="sx">qw(:odd)</span><span class="p">;</span>
+<span class="n">prin</span> <span class="n">m3</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="section" id="id8">
+<h2>Проверка версии</h2>
+<div class="highlight"><pre><span></span><span class="k">package</span> <span class="nn">Local::Module</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$VERSION</span> <span class="o">=</span> <span class="mf">1.4</span><span class="p">;</span>
+</pre></div>
+<div class="highlight"><pre><span></span><span class="k">use</span> <span class="nn">Local::Module</span> <span class="mf">1.5</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="section" id="unimport">
+<h2>Unimport</h2>
+<p>Отключение namespace-а пакета</p>
+<div class="highlight"><pre><span></span><span class="k">no</span> <span class="nn">Local::Module</span> <span class="n">LIST</span><span class="p">;</span>
+
+<span class="c1"># Local::Module::unimport(&#39;Local::Module&#39;, LIST);</span>
+</pre></div>
+</div>
+
+  </div>
+  <div class="article_meta">
+    <p>Posted on: Вт 14 Август 2018</p>
+    <p>Category: <a href="/category/perl.html">perl</a>
+ &ndash; Tags:
+      <a href="/tag/package.html">package</a>    </p>
+    <p>
+      
+      Share: 
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/modulation.html">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/modulation.html&text=Модульность">&ndash; Twitter</a>
+    </p>
+  </div>
+
+
+</article>
+    <footer>
+      <p>
+      <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
+      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
+      </p>
+    </footer>
+
+
+    <div id="ending_message">
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code">Twitter</a> </p>
+    </div>
+  </main>
+</body>
+</html>

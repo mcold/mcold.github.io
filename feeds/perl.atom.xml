@@ -1,5 +1,314 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Many-many code - perl</title><link href="/" rel="alternate"></link><link href="/feeds/perl.atom.xml" rel="self"></link><id>/</id><updated>2018-08-13T12:20:00+03:00</updated><entry><title>Define &amp; undef</title><link href="/define.html" rel="alternate"></link><published>2018-08-13T12:20:00+03:00</published><updated>2018-08-13T12:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-13:/define.html</id><summary type="html">&lt;p class="first last"&gt;Определенные и неопределенные значения&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Many-many code - perl</title><link href="/" rel="alternate"></link><link href="/feeds/perl.atom.xml" rel="self"></link><id>/</id><updated>2018-08-14T16:30:00+03:00</updated><entry><title>Pragmatic modules</title><link href="/pragmatic.html" rel="alternate"></link><published>2018-08-14T16:30:00+03:00</published><updated>2018-08-14T16:30:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-14:/pragmatic.html</id><summary type="html">&lt;p class="first last"&gt;Идея использования pragmatic modules&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="strict"&gt;
+&lt;h2&gt;strict&lt;/h2&gt;
+&lt;p&gt;Отключает некоторые потенциальные фичи интерпретатора, которые делают код ненадежным.
+Без параметров включает 3 ограничения:
+- use strict 'subs'
+- use strict 'refs'
+- use strict 'vars'&lt;/p&gt;
+&lt;p&gt;Их можно использовать раздельно&lt;/p&gt;
+&lt;div class="section" id="strict-refs"&gt;
+&lt;h3&gt;strict 'refs'&lt;/h3&gt;
+&lt;p&gt;Запрещает разыменование по строке&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;strict&lt;/span&gt; &lt;span class="n"&gt;refs&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="nv"&gt;$ref&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;\&lt;/span&gt;&lt;span class="nv"&gt;$foo&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$$ref\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="nv"&gt;$ref&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;foo&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$$ref\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="c1"&gt;# error&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="strict-vars"&gt;
+&lt;h3&gt;strict 'vars'&lt;/h3&gt;
+&lt;p&gt;Запрещает использовать переменные без явного указания принадлежности&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;strict&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;vars&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="nv"&gt;$&lt;/span&gt;&lt;span class="nn"&gt;Module::&lt;/span&gt;&lt;span class="nv"&gt;a&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;   &lt;span class="c1"&gt;# переменная scope-а&lt;/span&gt;
+&lt;span class="k"&gt;our&lt;/span&gt; &lt;span class="nv"&gt;$b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  &lt;span class="c1"&gt;# переменная пакета&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="strict-subs"&gt;
+&lt;h3&gt;strict 'subs'&lt;/h3&gt;
+&lt;p&gt;Запрещает разыменовывание переменных по их именам, т.е. подстановку объектов вместо bareword-ов&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;warnings&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Data::Dumper&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;Dumper&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt; &lt;span class="c1"&gt;# без ограничения срабатывает&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+$VAR1 = [
+      'test'
+    ];
+&lt;/pre&gt;
+&lt;p&gt;при наличии ограничения выдает error&lt;/p&gt;
+&lt;p&gt;стандартный способ использования выглядит следующим образом&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;strict&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;subs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;warnings&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Data::Dumper&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;str&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;Dumper&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;pre class="literal-block"&gt;
+$VAR1 = [
+      'str'
+    ];
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="warnings"&gt;
+&lt;h2&gt;warnings&lt;/h2&gt;
+&lt;p&gt;Включает предупреждения&lt;/p&gt;
+&lt;p&gt;В однострочниках включается ключем -w&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+perl -we &amp;quot;&amp;lt;command&amp;gt;&amp;quot;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="diagnostics"&gt;
+&lt;h2&gt;diagnostics&lt;/h2&gt;
+&lt;p&gt;Включает вывод подробной диагностики по каждому warning-у&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+perl -e 'use diagnostics; print(5 + &amp;quot;a&amp;quot;)';
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="lib"&gt;
+&lt;h2&gt;lib&lt;/h2&gt;
+&lt;p&gt;Позволяет кодом изменить &amp;#64;INC&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;lib&lt;/span&gt; &lt;span class="sx"&gt;qw(/tmp/lib)&lt;/span&gt;
+&lt;span class="k"&gt;BEGIN&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="nb"&gt;unshift&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;@INC&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;/tmp/lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="findbin"&gt;
+&lt;h2&gt;FindBin&lt;/h2&gt;
+&lt;p&gt;Используется для поиска бинарника и подключения библиотек относительно него&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;FindBin&lt;/span&gt; &lt;span class="sx"&gt;qw($Bin)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;lib&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$Bin/../lib&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="feature"&gt;
+&lt;h2&gt;feature&lt;/h2&gt;
+&lt;p&gt;Включает некоторые особенности из новой версии интерпретатора.
+Многие фичи не включены, ради того, чтобы избежать конфликтов.&lt;/p&gt;
+&lt;p&gt;Пример включения функции say:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;feature&lt;/span&gt; &lt;span class="sx"&gt;qw(say)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Альтернативой подключения отдельных фич является включение версии, что позволяет использовать все фичи этой версии&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="mf"&gt;5.010&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="no-pragma"&gt;
+&lt;h2&gt;no pragma&lt;/h2&gt;
+&lt;p&gt;Отключение прагматик&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;no&lt;/span&gt; &lt;span class="nn"&gt;strict&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;no&lt;/span&gt; &lt;span class="nn"&gt;feature&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;no&lt;/span&gt; &lt;span class="mf"&gt;5.010&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="package"></category></entry><entry><title>Модульность</title><link href="/modulation.html" rel="alternate"></link><published>2018-08-14T06:30:00+03:00</published><updated>2018-08-14T06:30:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-14:/modulation.html</id><summary type="html">&lt;p class="first last"&gt;Определяемся с областями видимости и структурой построения программ&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="id2"&gt;
+&lt;h2&gt;Пакет в модуле&lt;/h2&gt;
+&lt;p&gt;В Perl существует (как и в любом многоуровневом языке) разделение на namespace и модули.
+Однако в языке построение программ строится таким образом, чтобы названия пакетов совпадали с пространствами имен.
+Таким образом создавая модуль принято создавать и namespace, т.е. package.&lt;/p&gt;
+&lt;p&gt;Пакет = название namespace-а.
+Это способ создания отдельной области видимости для переменных.
+Причем перечень видимых переменных ограничивается теми, что указаны с оператором our.
+Namespace можно создавать&lt;/p&gt;
+&lt;p&gt;Приведем простой пример встроенного namespace-а:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;strict&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;package&lt;/span&gt; &lt;span class="nn"&gt;Some&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;our&lt;/span&gt; &lt;span class="nv"&gt;$y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="k"&gt;our&lt;/span&gt; &lt;span class="nv"&gt;@array&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sx"&gt;qw(foo bar barz)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$Some::x\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;$Some::y\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="nb"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nv"&gt;@&lt;/span&gt;&lt;span class="nn"&gt;Some::&lt;/span&gt;&lt;span class="nv"&gt;array&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id3"&gt;
+&lt;h2&gt;Многоуровневые пакеты&lt;/h2&gt;
+&lt;p&gt;Пример:&lt;/p&gt;
+&lt;p&gt;.LocalMultiplier.pm&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;package&lt;/span&gt; &lt;span class="nn"&gt;Local::Multiplier&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;m2&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;@_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nv"&gt;$x&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;m3&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nv"&gt;@_&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nv"&gt;$x&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id4"&gt;
+&lt;h2&gt;Блоки&lt;/h2&gt;
+&lt;p&gt;Существует несколько типов блоков:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+BEGIN
+END
+CHECK
+UNITCHECK
+INIT
+&lt;/pre&gt;
+&lt;p&gt;Проиллюстрируем примером блок END:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;my&lt;/span&gt; &lt;span class="nv"&gt;$fh&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="k"&gt;while&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
+
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;END&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nb"&gt;close&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$fh&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="nb"&gt;unlink&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nv"&gt;$file&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Кроме блоков есть еще переменная ${^GLOBAL_PHASE}, который используется для определения блока, в котором выполняется код в данный момент&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id5"&gt;
+&lt;h2&gt;Порядок выполнения&lt;/h2&gt;
+&lt;p&gt;sub и BEGIN выполняются перед основным кодом вне зависимости от расположения&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;BEGIN&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;require&lt;/span&gt; &lt;span class="nn"&gt;Some::Module&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;test1&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;test1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;test2&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;test2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="k"&gt;BEGIN&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="o"&gt;...&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Обе представленные функции будут объявлены ДО выполнения программы&lt;/p&gt;
+&lt;p&gt;т.е. порядок выполнения данной программы следующий:
+- BEGIN
+- объявлена функция test1
+- объявлена функция test2
+- BEGIN вложенный&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id6"&gt;
+&lt;h2&gt;Пространства имен&lt;/h2&gt;
+&lt;p&gt;Глобальное пространство имен включает:
+* объекты текущего модуля не включенные в блоки&lt;/p&gt;
+&lt;p&gt;Namespace = package
+Это способ создания определенной области видимости&lt;/p&gt;
+&lt;p&gt;Для имен пакетов используются те же литералы, что и название модуля. Т.е. в модуле должен находиться пакет с таким же именем
+При использовании инструкции use мы загружаем отдельные namespace-ы пакетов.&lt;/p&gt;
+&lt;p&gt;Глобальная область видимости = main package.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="main-package"&gt;
+&lt;h2&gt;main package&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nn"&gt;main::&lt;/span&gt;&lt;span class="n"&gt;print_size&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="state"&gt;
+&lt;h2&gt;state&lt;/h2&gt;
+&lt;p&gt;Отличается от my тем, что инициализируется только 1 раз&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="use-require"&gt;
+&lt;h2&gt;use &amp;amp; require&lt;/h2&gt;
+&lt;p&gt;Обе команды выполняют загрузку пространства имен пакета.&lt;/p&gt;
+&lt;p&gt;Преимущества использования use:
+* принимает аргументы
+* выполняет процедуру import с аргументами в загрузчике модуля (блок BEGIN)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Local::Module&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;param1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;param2&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="k"&gt;BEGIN&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;require&lt;/span&gt; &lt;span class="nn"&gt;Module&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="nn"&gt;Module&lt;/span&gt; &lt;span class="o"&gt;-&amp;gt;&lt;/span&gt; &lt;span class="nb"&gt;import&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;LIST&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="c1"&gt;# ~ Module::import(&amp;#39;Module&amp;#39;, LIST);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Процедура импорта будет вызвана из пакета, а не из модуля. Поэтому необходимо соблюдать конвенцию соответствия имени пакета и модуля.&lt;/p&gt;
+&lt;p&gt;Чтобы отключить выполнение выполнение импорта необходим выполнить use &amp;lt;module&amp;gt;() с пустыми скобками&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Module&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="k"&gt;BEGIN&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;require&lt;/span&gt; &lt;span class="nn"&gt;Module&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id7"&gt;
+&lt;h2&gt;Экспорт определенных функций&lt;/h2&gt;
+&lt;p&gt;Рассмотрим для начала пример экспорта функций стандартной библиотеки&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Local::Module&lt;/span&gt; &lt;span class="sx"&gt;qw(...)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;File::Path&lt;/span&gt; &lt;span class="sx"&gt;qw(make_path remove_tree)&lt;/span&gt;
+&lt;span class="n"&gt;make_path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;parent/child&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="n"&gt;remove_tree&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;parent/child&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Попробуем настроить экспорт наших собственных функций на примере пакета LocalMultiplier.pm&lt;/p&gt;
+&lt;p&gt;LocalMultiplier.pm&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;package&lt;/span&gt; &lt;span class="nn"&gt;Local::Multiplier&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;strict&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Exporter&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;import&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;our&lt;/span&gt; &lt;span class="nv"&gt;@EXPORT&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="sx"&gt;qw(m2 m3 m4 m5)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;m2&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nb"&gt;shift&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;m3&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nb"&gt;shift&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;m4&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nb"&gt;shift&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="k"&gt;sub&lt;/span&gt; &lt;span class="nf"&gt;m5&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="nb"&gt;shift&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;test.pl&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Local::Multiplier&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;m3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="nn"&gt;Local::Multiplier::&lt;/span&gt;&lt;span class="n"&gt;m3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Также процесс экспорта можно регулировать путем экспорта группы&lt;/p&gt;
+&lt;p&gt;формируем группы&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;our&lt;/span&gt; &lt;span class="nv"&gt;%EXPORT_TAGS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;odd&lt;/span&gt;  &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="sx"&gt;qw(m3 m5)&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+    &lt;span class="n"&gt;even&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="sx"&gt;qw(m2 m4 m6)&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;экспортируем группу odd&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Local::Multiplier&lt;/span&gt; &lt;span class="sx"&gt;qw(:odd)&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="n"&gt;prin&lt;/span&gt; &lt;span class="n"&gt;m3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="id8"&gt;
+&lt;h2&gt;Проверка версии&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;package&lt;/span&gt; &lt;span class="nn"&gt;Local::Module&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;our&lt;/span&gt; &lt;span class="nv"&gt;$VERSION&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mf"&gt;1.4&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;use&lt;/span&gt; &lt;span class="nn"&gt;Local::Module&lt;/span&gt; &lt;span class="mf"&gt;1.5&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="unimport"&gt;
+&lt;h2&gt;Unimport&lt;/h2&gt;
+&lt;p&gt;Отключение namespace-а пакета&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;no&lt;/span&gt; &lt;span class="nn"&gt;Local::Module&lt;/span&gt; &lt;span class="n"&gt;LIST&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Local::Module::unimport(&amp;#39;Local::Module&amp;#39;, LIST);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="package"></category></entry><entry><title>Define &amp; undef</title><link href="/define.html" rel="alternate"></link><published>2018-08-13T12:20:00+03:00</published><updated>2018-08-13T12:20:00+03:00</updated><author><name>Michael Cold</name></author><id>tag:None,2018-08-13:/define.html</id><summary type="html">&lt;p class="first last"&gt;Определенные и неопределенные значения&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="defined"&gt;
 &lt;h2&gt;Функция defined&lt;/h2&gt;
 &lt;pre class="literal-block"&gt;
