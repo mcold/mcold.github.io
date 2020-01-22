@@ -12,12 +12,11 @@
   <meta name="author" content="Michael Cold">
   <meta name="description" content="Posts and writings by Michael Cold">
 
-  <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Many-many code Atom" />
 
 <meta name="keywords" content="class">
 
   <title>
-    Many-many code
+    A little bit about anything
 &ndash; Inheritance  </title>
 
 </head>
@@ -31,9 +30,9 @@
       <h3><a href="">Michael Cold</a></h3>
       <p></p>
       <ul>
-        <li><a href="/category/python.html">python</a></li>
-        <li><a href="/category/django.html">django</a></li>
-        <li><a href="/category/perl.html">perl</a></li>
+        <li><a href="/category/python.html" target="_blank">python</a></li>
+        <li><a href="/category/django.html" target="_blank">django</a></li>
+        <li><a href="/category/perl.html" target="_blank">perl</a></li>
       </ul>
     </div>
   </aside>
@@ -55,22 +54,22 @@
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">parent_class</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m parent!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m parent!&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;parent func&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;parent func&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">parent_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from parent&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from parent&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">child_class</span><span class="p">(</span><span class="n">parent_class</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;child func&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;child func&quot;</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -96,26 +95,26 @@ Let's have a look on case, when child have two parents. In our event it is class
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">father_class</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m father!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m father!&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">father_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Hay from father&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hay from father&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">mother_class</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m mother!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m mother!&quot;</span><span class="p">)</span>
 
 
     <span class="k">def</span> <span class="nf">mother_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Hay from mother&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hay from mother&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">child_class</span><span class="p">(</span><span class="n">father_class</span><span class="p">,</span> <span class="n">mother_class</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -135,34 +134,34 @@ Hay from mother
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">father_class</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m father!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m father!&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;father func&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;father func&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">parent_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from father&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from father&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">mother_class</span><span class="p">:</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m mother!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m mother!&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;mother func&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mother func&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">parent_func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from mother&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This function I&#39;ve got from mother&quot;</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">child_class</span><span class="p">(</span><span class="n">father_class</span><span class="p">,</span> <span class="n">mother_class</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I&#39;m child!&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;child func&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;child func&quot;</span><span class="p">)</span>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
@@ -188,8 +187,8 @@ This function I've got from father
     <p>
       
       Share: 
-      <a href="https://www.facebook.com/sharer/sharer.php?u=/inheritance.html">Facebook</a>
-      <a href="https://twitter.com/intent/tweet?url=/inheritance.html&text=Inheritance">&ndash; Twitter</a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u=/inheritance.html" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=/inheritance.html&text=Inheritance" target="_blank">&ndash; Twitter</a>
     </p>
   </div>
 
@@ -198,15 +197,14 @@ This function I've got from father
     <footer>
       <p>
       <a href="">Index</a> &brvbar; <a href="/archives.html">Archives</a>
-      &brvbar; <a href="/feeds/all.atom.xml">Atom</a>
       </p>
     </footer>
 
 
     <div id="ending_message">
-      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com">Pelican</a>
-      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=">Facebook</a>
-      <a href="https://twitter.com/intent/tweet?url=&text=Many-many code">Twitter</a> </p>
+      <p>&copy; Michael Cold. Built using <a href="http://getpelican.com" target="_blank">Pelican</a>
+      Share: <a href="https://www.facebook.com/sharer/sharer.php?u=" target="_blank">Facebook</a>
+      <a href="https://twitter.com/intent/tweet?url=&text=A little bit about anything" target="_blank">Twitter</a> </p>
     </div>
   </main>
 </body>
